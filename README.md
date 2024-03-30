@@ -29,16 +29,18 @@ Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express 
     ```bash
     npm install
 
-3. **Konfigurasi Database**
+4. **Konfigurasi Database**
 
 ## Buka file config/database dan atur parameter-parameter berikut sesuai dengan pengaturan database Anda:
 
     ```bash
-    const db = new sequelize(
-    "recyeco",
-    "root",
-    "",
-    {
+    "database":"recyeco",
+    "username":"root",
+    "password":"",
     host:"localhost",
-    dialect:"mysql"
-})
+    "dialect":"mysql"
+
+5. **Jalankan Server**
+
+    ```bash
+    npm start
