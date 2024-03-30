@@ -31,7 +31,7 @@ Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express 
 
 4. **Konfigurasi Database**
 
-## Buka file config/database dan atur parameter-parameter berikut sesuai dengan pengaturan database Anda:
+    **Buka file config/database dan atur parameter-parameter berikut sesuai dengan pengaturan database Anda:**
 
     ```bash
     "database":"recyeco",
