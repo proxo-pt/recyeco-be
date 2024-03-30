@@ -36,7 +36,7 @@ const postingan = db.define(
             type:DataTypes.STRING
         },
         status:{
-            type:DataTypes.ENUM("tersedia","terjual")
+            type:DataTypes.ENUM("tersedia","terjual","menunggu")
         }
     },{
         freezeTableName:true

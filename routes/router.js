@@ -23,8 +23,10 @@ router.get("/detailPostingan",user.detailPostingan)
 router.post("/:iduser/logout",verify,user.logout)
 router.get("/:iduser/myprofil",verify,user.myprofil)
 router.post("/:iduser/addpostingan",verify,upload.single("foto"),user.addpostingan)
-router.post("/:iduser/addkeranjang",user.addKeranjang)
-router.get("/:iduser/keranjang",user.keranjang)
+router.post("/:iduser/addkeranjang",verify,user.addKeranjang)
+router.get("/:iduser/keranjang",verify,user.keranjang)
+router.get("/:iduser/manajemenProduk",verify,user.myPostingan)
+router.post("/:iduser/:idpostingan/beli",verify,user.beli)
 // 
 
 //admin

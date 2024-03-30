@@ -148,7 +148,7 @@ module.exports = {
                 where:{
                     id:id
                 },
-                attributes:["foto","judul","jenis","berat","harga","deskripsi","lokasi"]
+                attributes:["foto","judul","jenis","berat","harga","deskripsi","lokasi","createdAt"]
             })
 
             if(!response){
@@ -159,6 +159,29 @@ module.exports = {
                 message:"succes",
                 Postingan:response
             })
+        } catch (error) {
+            return res.json({message:error})
+        }
+    },
+
+    myPostingan:async(req,res)=>{
+        const {iduser} = req.params
+
+        try {
+            const response = await postingan.findAll({
+                where:{
+                    idpenjual:iduser
+                },
+                attributes:[
+                    "judul",
+                    "jenis",
+                    "berat",
+                    "harga",
+                    "status"
+                ]
+            })
+
+            return res.json({manajemen:response})
         } catch (error) {
             return res.json({message:error})
         }
@@ -223,7 +246,25 @@ module.exports = {
         }
     },
 
+    beli:async(req,res)=>{
+        const {iduser,idpostingan} = req.params
 
+        try {
+            const users = await user.findByPk(iduser)
+            const response = await postingan.findByPk(idpostingan)
+
+            if(users.id === response.idpenjual){
+                return res.json({message:"nda bisa dong postingan adnda sendiri"})
+            }
+
+            response.status = "menunggu"
+            await response.save()
+
+            return res.json({message:"succes,dan silahkan hubungi penjual"})
+        } catch (error) {
+            return res.json({message:error})
+        }
+    },
 
     // addevent:async(req,res)=>{
     //     const {iduser} = req.params;
