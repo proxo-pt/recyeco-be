@@ -44,3 +44,9 @@ Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express 
 
     ```bash
     npm start
+
+# Penggunaan
+
+Backend ini membangun API dengan beberapa endpoint yang dapat Anda gunakan untuk mengakses data dari database Anda. Berikut adalah contoh penggunaan dasar:
+
+1. 
