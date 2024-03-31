@@ -53,8 +53,3 @@ Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express 
 
 ## endpoint
 
-1. endpoint : /login
-    method  : POST
-    Request : {
-        "email","password"
-    }
