@@ -52,6 +52,14 @@ Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express 
 
 # Penggunaan
 
-Backend ini membangun API dengan beberapa endpoint yang dapat Anda gunakan untuk mengakses data dari database Anda. Berikut adalah contoh penggunaan dasar:
+##endpoint
 
-1. 
+1. endpoint : **/login**
+    method  : **POST**
+    request : 
+        ```bash
+        {
+            "email"     :"contoh@gmail"
+            "password   :"contoh"
+        }  
+
