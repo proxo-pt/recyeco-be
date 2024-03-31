@@ -52,14 +52,15 @@ Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express 
 
 # Penggunaan
 
-##endpoint
+## endpoint
 
-1. endpoint : **/login**
-    method  : **POST**
-    request : 
-        ```bash
-        {
-            "email"     :"contoh@gmail"
-            "password   :"contoh"
-        }  
+    1. **endpoint :** 
+            ## /login
+            ## method  : POST
+            ## request : 
+                ```bash
+                {
+                    "email"     :"contoh@gmail"
+                    "password   :"contoh"
+                }  
 
