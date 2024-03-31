@@ -47,7 +47,6 @@ Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express 
 
     or
 
-    ```bash
     nodemon index
 
 # Penggunaan
