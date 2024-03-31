@@ -50,12 +50,7 @@ Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express 
     nodemon index
 
 ## endpoint
- 
- **1. login**
-  **endpoint : /login**
-  **method : POST**
-  **Request : {**
-    **email,**
-    **password**
-    **}**
+ ```bash
+     login
+
 
