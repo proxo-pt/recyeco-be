@@ -37,7 +37,7 @@ Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express 
     "database":"recyeco",
     "username":"root",
     "password":"",
-    host:"localhost",
+    "host":"localhost",
     "dialect":"mysql"
 
 5. **Jalankan Server**
@@ -45,11 +45,16 @@ Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express 
     ```bash
     npm start
 
-**or**
+    **or**
+
+    nodemon index
 
 
-    "```bash
-    nodemon index"
 
-6. **tes**
+## endpoint
 
+1. endpoint : /login
+    method  : POST
+    Request : {
+        "email","password"
+    }
