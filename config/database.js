@@ -1,8 +1,7 @@
 const sequelize = require("sequelize")
 
-const db = new sequelize("railway","root","onBiIqMuvcfxIdvtprFxbbbVlmxDiTZa",{
-    host:"viaduct.proxy.rlwy.net",
-    port:33998,
+const db = new sequelize("recyeco","root","",{
+    host:"localhost",
     dialect:"mysql"
 })
 
