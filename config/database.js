@@ -1,10 +1,14 @@
 const sequelize = require("sequelize")
 
-const db = new sequelize("recyeco","root","",{
-    host:"localhost",
-    dialect:"mysql"
-})
+const dbName = "recyeco";
+const dbUser = "root";
+const dbPassword = "";
+const dbHost = "localhost";
 
+const db = new Sequelize(dbName, dbUser, dbPassword, {
+  host: dbHost,
+  dialect: "mysql"
+});
 try{
 db.authenticate()
 console.log("database terhubung")
