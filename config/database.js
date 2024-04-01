@@ -1,14 +1,11 @@
 const sequelize = require("sequelize")
 
-const dbName = "railway";
-const dbUser = "root";
-const dbPassword = "onBiIqMuvcfxIdvtprFxbbbVlmxDiTZa";
-const dbHost = "viaduct.proxy.rlwy.net";
+const db = new sequelize("railway","root","onBiIqMuvcfxIdvtprFxbbbVlmxDiTZa",{
+    host:"viaduct.proxy.rlwy.net",
+    port:33998,
+    dialect:"mysql"
+})
 
-const db = new Sequelize(dbName, dbUser, dbPassword, {
-  host: dbHost,
-  dialect: "mysql"
-});
 try{
 db.authenticate()
 console.log("database terhubung")

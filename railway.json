@@ -1,8 +1,0 @@
-{
-    "env": {
-      "DB_NAME": "railway",
-      "DB_USER": "root",
-      "DB_PASSWORD": "onBiIqMuvcfxIdvtprFxbbbVlmxDiTZa",
-      "DB_HOST": "viaduct.proxy.rlwy.net"
-    }
-  }
