@@ -1,9 +1,9 @@
 const sequelize = require("sequelize")
 
-const dbName = "recyeco";
+const dbName = "railway";
 const dbUser = "root";
-const dbPassword = "";
-const dbHost = "localhost";
+const dbPassword = "onBiIqMuvcfxIdvtprFxbbbVlmxDiTZa";
+const dbHost = "viaduct.proxy.rlwy.net";
 
 const db = new Sequelize(dbName, dbUser, dbPassword, {
   host: dbHost,
