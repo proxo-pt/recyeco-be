@@ -256,7 +256,7 @@ module.exports = {
             if(users.id === response.idpenjual){
                 return res.json({message:"nda bisa dong postingan adnda sendiri"})
             }
-
+            
             response.status = "menunggu"
             await response.save()
 

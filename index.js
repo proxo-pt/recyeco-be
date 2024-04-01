@@ -3,8 +3,11 @@ const app = express()
 const bodyParser = require("body-parser")
 const db = require("./config/database")
 const router = require("./routes/router")
+const cors = require("cors")
 port = 1000
 
+
+app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:true}))
 app.use(router)
