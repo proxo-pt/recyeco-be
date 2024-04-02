@@ -52,5 +52,35 @@ Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express 
 ## endpoint
    **login**
     
+   **endpoint : /login**
+   **method : POST**
+   **Request :**
+   ```bash
+   {email,password};
+   ```
 
+   **register**
+    
+   **endpoint : /register**
+   **method : POST**
+   **Request :**
+   ```bash
+   { username,password,ttl,jk};
+   ```
 
+   **sendemail**
+
+   **endpoint : /sendemail**
+   **method : POST**
+   **Request :**
+    ```bash
+    { email }
+    ```
+   **reset password**
+    
+   **endpoint : /:iduser/resetpassword**
+   **method : POST**
+   **Request :**
+   ```bash
+   {username,email,password,ttl,jk};
+   ```
