@@ -31,10 +31,11 @@ Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express 
 
 4. **Konfigurasi Database**
 
+    buat database pada mysql localnya kamu dengan nama **recyeco** biar sesuai nda perlu rubah2 lagi
     **Buka file config/database dan atur parameter-parameter berikut sesuai dengan pengaturan database Anda:**
 
     ```bash
-    "database":"recyeco",
+    "database":"recyeco(sesuai dengan database yang di buat di mysql nya kamu)",
     "username":"root",
     "password":"",
     "host":"localhost",
@@ -54,7 +55,7 @@ Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express 
    **endpoint : /login**
    
    **method : POST**
-   
+
    **Request :    {email,password}**
 
 ## register
