@@ -5,7 +5,6 @@ const riwayat = require("../models/riwayat")
 const tukarpoint = require("../models/tukarpoint")
 const event = require("../models/event")
 const keranjang = require("../models/keranjang")
-const requestevent = require("../models/requestevent")
 const {Op} = require("sequelize")
 
 module.exports = {
@@ -14,10 +13,10 @@ module.exports = {
         const {iduser} = req.params
         try {
             const token = await user.findByPk(iduser)
-            if(token){
             token.token = null
             await token.save()
-            }
+
+            res.clearCookie("token")
             
             return res.status(200).json({message:"berhasil logout!"})
         } catch (error) {
@@ -66,11 +65,73 @@ module.exports = {
         }
     },
 
+    editusername:async(req,res)=>{
+        const {username} = req.body;
+        const {iduser} = req.params
+        try {
+            const users = await user.findByPk(iduser)
+            console.log(users)
+            if(!users)
+                return res.json({message:"user not found"})
+
+            await users.update({username:username})
+
+            return res.status(200).json({message:"update username succes"})
+        } catch (error) {
+            return res.json({message:error})
+        }
+    },
+    editemail:async(req,res)=>{
+        const {email} = req.body;
+        const {iduser} = req.params
+
+        if(!email.includes("@")){
+            return res.json({message:"harus dengan format @"})
+        }
+        try {
+            const users = await user.findByPk(iduser)
+            if(!users)
+                return res.json({message:"user not found"})
+
+            const cekusers = await user.findAll()
+
+            if(users.email === cekusers.email){
+                return res.json({message:"email sudah terdaftar"})
+            }
+
+            await users.update({email:email})
+
+            return res.status(200).json({message:"update email succes"})
+        } catch (error) {
+            return res.json({message:error})
+        }
+    },
+    editfoto:async(req,res)=>{
+        const foto = req.file;
+        const {iduser} = req.params
+        
+        try {
+            const users = await user.findByPk(iduser)
+            if(!users)
+                return res.json({message:"user not found"})
+
+
+            await users.update({foto:foto.path})
+
+            return res.status(200).json({message:"update foto succes"})
+        } catch (error) {
+            return res.json({message:error})
+        }
+    },
+
     addpostingan:async(req,res)=>{
         const {iduser} = req.params;
-        const{judul,jenis,deskripsi,berat,harga,kontak,lokasi}= req.body
+        const{judul,jenis,deskripsi,berat,harga,kontak,lokasi,latitude,longitude}= req.body
         const foto = req.file
 
+        if(!judul||!jenis||!deskripsi||!berat||!harga||!kontak||!lokasi||!latitude||!longitude){
+            return res.json({message:"*kolom harus di isi semua"})
+        }
         try {
             const penjual = await user.findByPk(iduser)
             const response = await postingan.create({
@@ -84,6 +145,8 @@ module.exports = {
                 harga:harga,
                 kontak:kontak,
                 lokasi:lokasi,
+                latitude:latitude,
+                longitude:longitude,
                 status:"tersedia"
             })
             return res.status(200).json({message:"succes",postingan:response})
@@ -97,10 +160,9 @@ module.exports = {
             const response = await postingan.findAll({
                 attributes:[
                     "foto",
+                    "jenis",
                     "judul",
-                    "harga",
-                    "berat",
-                    "lokasi"]
+                    "harga",]
             })
 
             return res.status(200).json({
@@ -121,11 +183,9 @@ module.exports = {
                 },
                 attributes:[
                     "foto",
+                    "jenis",
                     "judul",
-                    "harga",
-                    "berat",
-                    "lokasi"
-                ]
+                    "harga",]
             })
 
             if(!response[0])
@@ -148,7 +208,15 @@ module.exports = {
                 where:{
                     id:id
                 },
-                attributes:["foto","judul","jenis","berat","harga","deskripsi","lokasi","createdAt"]
+                attributes:[
+                    "foto",
+                    "judul",
+                    "jenis",
+                    "berat",
+                    "harga",
+                    "deskripsi",
+                    "lokasi",
+                    "createdAt"]
             })
 
             if(!response){
@@ -180,6 +248,8 @@ module.exports = {
                     "status"
                 ]
             })
+            if(!response[0])
+                return res.json({message:"postingan belum ada!"})
 
             return res.json({manajemen:response})
         } catch (error) {
@@ -254,11 +324,11 @@ module.exports = {
             const response = await postingan.findByPk(idpostingan)
 
             if(users.id === response.idpenjual){
-                return res.json({message:"nda bisa dong postingan adnda sendiri"})
+                return res.json({message:"nda bisa dong postingan anda sendiri"})
             }
             
-            response.status = "menunggu"
-            await response.save()
+        
+            await response.update()
 
             return res.json({message:"succes,dan silahkan hubungi penjual"})
         } catch (error) {

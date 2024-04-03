@@ -5,7 +5,7 @@ module.exports = async (req, res, next) => {
 try {
 const {iduser} = req.params
 const datas = await user.findByPk(iduser)
-const token = datas.token;
+const token = req.headers.authorization;
 if(!token){
     return res.status(403).json({message:"incorrect credential"})
 }
@@ -15,7 +15,7 @@ const jwtToken = token.split(' ').pop()
 
     const akuns = await user.findByPk(data.id)
     if(!akuns){
-        return res.status(404).json({message:"akun no found"})
+        return res.status(404).json({message:"user no found"})
     }
     if (akuns.id !== datas.id) {
         return res.status(403).json({ message: "Harus Login Terlbih Dahulu!" });
@@ -23,7 +23,7 @@ const jwtToken = token.split(' ').pop()
 
     console.log(data.id," dan ",akuns.id)
 
-    req.akun = akuns 
+    req.akun = akuns
     next()
 } catch (error) {
     return res.status(403).json({message:"incorrect credential"})

@@ -19,8 +19,12 @@ module.exports={
             return res.json({message:"harus dengan format @"})
         }
         try {
+            const cekuser = await user.findAll()
+            if(cekuser.email === email){
+                return res.json({message:"email sudah terdaftar"})
+            }
+            
             const users = await user.findOne({where:{email:email}})
-            console.log(users)
             if(users){
                 console.log("email sudah terdaftar")
                 return res.status(400).json({message:"email sudah terdaftar"})
@@ -73,12 +77,17 @@ module.exports={
             //create jwt
             const token=jwt.sign({
                 id:usernames.id,
+                username:usernames.username
             },
             "qwertyuiop",
             {expiresIn:'1d'})
 
-            usernames.token = token
-            await usernames.save()
+            await usernames.update({token:token}) 
+            
+            res.cookie("token",token,{
+                httpOnly:true,
+                maxAge: 24 * 60 * 60 * 1000
+            })
             
             return res.status(200).json({message:"login berhasil!",id:usernames.id,token:token})
             

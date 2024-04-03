@@ -21,19 +21,25 @@ const postingan = db.define(
             type:DataTypes.STRING
         },
         berat:{
-            type:DataTypes.INTEGER
+            type:DataTypes.DECIMAL
         },
         harga:{
             type:DataTypes.INTEGER
         },
         kontak:{
-            type:DataTypes.INTEGER
+            type:DataTypes.STRING
         },
         foto:{
             type:DataTypes.STRING
         },
         lokasi:{
             type:DataTypes.STRING
+        },
+        latitude:{
+            type:DataTypes.DECIMAL
+        },
+        longitude:{
+            type:DataTypes.DECIMAL
         },
         status:{
             type:DataTypes.ENUM("tersedia","terjual","menunggu")

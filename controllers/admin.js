@@ -5,7 +5,6 @@ const riwayat = require("../models/riwayat")
 const tukarpoint = require("../models/tukarpoint")
 const event = require("../models/event")
 const keranjang = require("../models/keranjang")
-const requestevent = require("../models/requestevent")
 const {Op} = require("sequelize")
 
 module.exports={
@@ -19,6 +18,7 @@ module.exports={
                     } 
                 },
                 attributes:[
+                    "id",
                     "email",
                     "username",
                     "foto",
