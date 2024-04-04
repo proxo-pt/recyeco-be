@@ -77,9 +77,11 @@ Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express 
 
    **Request body :**
    ```json
+   {
       "username":"username",
       "email":"email",
       "password":"password"
+   }
    ```
 
 ## sendemail
