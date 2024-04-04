@@ -55,14 +55,14 @@ Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express 
 
    **Request body :    {email,password}**
 
-   **Response :**
+   <!-- **Response :**
    ```json
    {
       "message:":"login berhasil",
       "id":"usernames.id",
       "token":"token"
    }
-   ```
+   ``` -->
 
 ## register
    **endpoint : /register**
