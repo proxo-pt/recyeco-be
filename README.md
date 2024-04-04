@@ -62,6 +62,7 @@ Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express 
       "id":"usernames.id",
       "token":"token"
    }
+   ```
 
 ## register
    **endpoint : /register**
