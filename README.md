@@ -31,13 +31,13 @@ Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express 
 
 4. **Konfigurasi Database**
 
-    **1.install xampp**
+    1.install xampp
 
-    **2.nyalakan(start) apache dan mysql**
+    2.nyalakan(start) apache dan mysql
 
-    **3.ke website phpmyadmin atau tekan admin pada mysql**
-    
-    **4.buat database pada mysql localnya kamu dengan nama **recyeco** biar sesuai nda perlu rubah2 lagi**
+    3.ke website phpmyadmin atau tekan admin pada mysql
+
+    4.buat database pada mysql localnya kamu dengan nama **recyeco** biar sesuai nda perlu rubah2 lagi
 
 
 
