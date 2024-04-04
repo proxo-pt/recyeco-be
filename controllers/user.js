@@ -106,6 +106,7 @@ module.exports = {
             return res.json({message:error})
         }
     },
+
     editfoto:async(req,res)=>{
         const foto = req.file;
         const {iduser} = req.params
@@ -335,30 +336,6 @@ module.exports = {
             return res.json({message:error})
         }
     },
-
-    // addevent:async(req,res)=>{
-    //     const {iduser} = req.params;
-    //     const{judul,reward_point,kuota,waktu,lokasi}= req.body
-    //     const foto = req.file
-
-    //     try {
-    //         const users = await user.findByPk(iduser)
-
-    //         const request = await requestevent.create({
-    //             judul:judul,
-    //             reward_point:reward_point,
-    //             kuota:kuota,
-    //             gambar:foto.path,
-    //             waktu:waktu,
-    //             lokasi:lokasi,
-    //             pelaksana:users.id
-    //         })
-
-    //         return res.json({message:"succes request event",request:request})
-    //     } catch (error) {
-    //         return res.json({message:"server error",error:error})
-    //     }
-    // },
 
 
 }
