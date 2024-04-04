@@ -48,6 +48,12 @@ Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express 
     ```
 
 # endpoint
+
+### server :
+   **localhost:1000/**
+
+   cara penggunaanya misal localhost:1000/endpoint
+
 ## login
    **endpoint : /login**
    
@@ -69,7 +75,12 @@ Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express 
 
    **method : POST**
 
-   **Request body :    { username,password,ttl,jk}**
+   **Request body :**
+   ```json
+      "username":"username",
+      "email":"email",
+      "password":"password"
+   ```
 
 ## sendemail
    **endpoint : /sendemail**
