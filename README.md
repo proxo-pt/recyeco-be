@@ -108,6 +108,8 @@ Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express 
 
    **method : POST**
 
+   **Request params : {iduser}**
+
    **Request body :**
    ```json
    {
@@ -115,5 +117,3 @@ Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express 
       "confirmpassword":"confirmpassword",
    }
    ```
-
-   **Request params : {iduser}**
