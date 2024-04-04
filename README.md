@@ -59,7 +59,13 @@ Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express 
    
    **method : POST**
 
-   **Request body :    {email,password}**
+   **Request body :**
+   ```json
+   {
+      "email":"email",
+      "password":"password"
+   }
+   ```
 
    <!-- **Response :**
    ```json
@@ -89,7 +95,12 @@ Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express 
 
    **method : POST**
 
-   **Request body :     { email }**
+   **Request body :**
+   ```json
+   {
+      "email":"email",
+   }
+   ```
 
 ## reset password
     
@@ -97,6 +108,12 @@ Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express 
 
    **method : POST**
 
-   **Request body :    {username,email,password,ttl,jk}**
+   **Request body :**
+   ```json
+   {
+      "newpassword":"newpassword",
+      "confirmpassword":"confirmpassword",
+   }
+   ```
 
    **Request params : {iduser}**
