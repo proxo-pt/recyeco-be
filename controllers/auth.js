@@ -6,10 +6,9 @@ const jwt = require("jsonwebtoken")
 module.exports={
 
     register:async(req,res)=>{
-        const {username,email,password,ttl,jk}=req.body;
-        const foto = req.file;
+        const {username,email,password}=req.body;
 
-        if(!username || !password || !email || !foto || !ttl || !jk){
+        if(!username || !password || !email){
             return res.json({message:"username,email,password,foto,tempat tanggal lahir,jenis kelamin tidak boleh kosong!"})
         }       
         if(password.length < 8){
@@ -35,9 +34,6 @@ module.exports={
                 username:username,
                 email:email,
                 password:hashPassword,
-                foto:foto.path,
-                ttl:ttl,
-                jk:jk
             })
             return res.status(200).json({message:"registrasi berhasil",data:akun})
         } catch (error) {
