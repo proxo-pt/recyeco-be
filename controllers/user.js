@@ -5,7 +5,7 @@ const riwayat = require("../models/riwayat")
 const tukarpoint = require("../models/tukarpoint")
 const event = require("../models/event")
 const keranjang = require("../models/keranjang")
-const {Op} = require("sequelize")
+const {Op, where} = require("sequelize")
 
 module.exports = {
 
@@ -107,7 +107,41 @@ module.exports = {
         }
     },
 
-    editfoto:async(req,res)=>{
+    addttl:async(req,res)=>{
+        const {iduser} = req.params;
+        const {ttl} = req.body;
+
+        try {
+            const users = await user.findByPk(iduser)
+
+            await users.update({
+                ttl:ttl
+            })
+
+            return res.json({message:"succes add tempat,tanggal lahir!"})
+        } catch (error) {
+            return res.json({error})
+        }
+    },
+
+    addjk:async(req,res)=>{
+        const {iduser} = req.params;
+        const {jk} = req.body;
+
+        try {
+            const users = await user.findByPk(iduser)
+
+            await users.update({
+                jk:jk
+            })
+
+            return res.json({message:"succes add tempat,tanggal lahir!"})
+        } catch (error) {
+            return res.json({error})
+        }
+    },
+
+    addfoto:async(req,res)=>{
         const foto = req.file;
         const {iduser} = req.params
         
@@ -161,6 +195,7 @@ module.exports = {
             const response = await postingan.findAll({
                 attributes:[
                     "foto",
+                    "penjual",
                     "jenis",
                     "judul",
                     "harga",]
@@ -264,27 +299,32 @@ module.exports = {
 
         try {
             const produk = await postingan.findByPk(id)
-            const keranjangs = await keranjang.findAll({
+            if(!produk){
+                return res.status(404).json({message:"postingan tidak ada!"})
+            }
+            const keranjangs = await keranjang.findOne({
                 where:{
                     iduser:iduser,
-                    idpostingan:produk.id
+                    idpostingan:id
                 }
             })
 
-            if(keranjangs[0])
-                return res.json({message:"postingan sudah ada di keranjang"})
+            if(keranjangs){
+                return res.json({message:"postingan sudah di keranjang anda"})
+            }
 
-            const result = await keranjang.create({
+
+            const response = await keranjang.create({
                 iduser:iduser,
-                idpostingan:produk.id
+                idpostingan:id
             })
-            return res.json({
-                message:"succes add to keranjang",
-                postingan:result
-            })
+
+            return res.json({message:"succes add keranjang"})
         } catch (error) {
-            return res.json({message:error})
+            return res.json({message:"error"})
         }
+
+  
     },
 
     keranjang:async(req,res)=>{
@@ -299,10 +339,10 @@ module.exports = {
                     foreignKey:"idpostingan",
                     attributes:[
                         "foto",
+                        "penjual",
+                        "jenis",
                         "judul",
-                        "harga",
-                        "berat",
-                        "lokasi"]
+                        "harga",]
                 }],
                 attributes:[]
             })
@@ -324,18 +364,74 @@ module.exports = {
             const users = await user.findByPk(iduser)
             const response = await postingan.findByPk(idpostingan)
 
+            if(!response){
+                return res.json({message:"postingan tidak ada!"})
+            }
+
             if(users.id === response.idpenjual){
                 return res.json({message:"nda bisa dong postingan anda sendiri"})
             }
             
+            if(response.status==="terjual"){
+                return res.json({message:"sudah terjual"})
+            }
         
-            await response.update()
+            await response.update({status:"menunggu"})
 
             return res.json({message:"succes,dan silahkan hubungi penjual"})
         } catch (error) {
-            return res.json({message:error})
+            return res.json({message:"ERROR"})
         }
     },
 
+//dashboard
+    totalproduk:async(req,res)=>{
+        const {iduser} = req.params;
+        try {
+            const response = await postingan.findAll({
+                where:{
+                    idpenjual:iduser
+                }
+            })
+
+            return res.json({total_produk : response.length})
+        } catch (error) {
+            return res.json({message:"eror"})
+        }
+    },
+
+    totalprodukterjual:async(req,res)=>{
+        const {iduser} = req.params;
+        try {
+            const response = await postingan.findAll({
+                where:{
+                    idpenjual:iduser,
+                    status:"terjual"
+                }
+            })
+
+            return res.json({total_produk : response.length})
+        } catch (error) {
+            return res.json({message:"eror"})
+        }
+    },
+
+    totalpendapatan:async(req,res)=>{
+        const {iduser} = req.params;
+
+        try {
+            const total = await postingan.sum("harga",{
+                where:{
+                    idpenjual:iduser,
+                    status:"terjual"
+                }
+            })
+
+            
+            return res.json({total:total})
+        } catch (error) {
+            return res.status(404)
+        }
+    },
 
 }
