@@ -9,13 +9,13 @@ module.exports={
         const {username,email,password}=req.body;
 
         if(!username || !password || !email){
-            return res.json({message:"username,email,password,foto,tempat tanggal lahir,jenis kelamin tidak boleh kosong!"})
+            return res.status(400).json({message:"username,email,password,foto,tempat tanggal lahir,jenis kelamin tidak boleh kosong!"})
         }       
         if(password.length < 8){
-            return res.json({message:"minimal 8 karakter"})
+            return res.status(400).json({message:"minimal 8 karakter"})
         }
         if(!email.includes("@")){
-            return res.json({message:"harus dengan format @"})
+            return res.status(400).json({message:"harus dengan format @"})
         }
         try {
             const cekuser = await user.findAll()
@@ -46,16 +46,16 @@ module.exports={
         //masih salah2 login
         const {email,password} = req.body
         if(!email && !password){
-            return res.json({message:"email atau password tidak boleh kosong!"})
+            return res.status(400).json({message:"email atau password tidak boleh kosong!"})
         }       
         if(!password){
-            return res.json({message:"password tidak boleh kosong!"})
+            return res.status(400).json({message:"password tidak boleh kosong!"})
         }
         if(!email){
-            return res.json({message:"email tidak boleh kosong!"})
+            return res.status(400).json({message:"email tidak boleh kosong!"})
         }
         if(!email.includes("@")){
-            return res.json({message:"harus dengan format @"})
+            return res.status(400).json({message:"harus dengan format @"})
         }
 
         try {
@@ -64,11 +64,11 @@ module.exports={
                     email:email
                 }})
             if(!usernames){
-                return res.json({message:"email tidak terdaftar"})
+                return res.status(400).json({message:"email tidak terdaftar"})
             }
             const passwords = await bcrypt.compare(password, usernames.password)
             if(!passwords){
-                return res.json({message:"password salah!"})
+                return res.status(400).json({message:"password salah!"})
     }
             //create jwt
             const token=jwt.sign({
@@ -88,7 +88,7 @@ module.exports={
             return res.status(200).json({message:"login berhasil!",id:usernames.id,token:token})
             
         } catch (error) {
-            return res.json({message:"error",error})
+            return res.status(500).json({message:"error",error})
         }
         
     },
@@ -152,10 +152,10 @@ module.exports={
         const {iduser} = req.params
 
         if(newpassword.length < 8){
-            return res.json({message:"minimal 8 karakter"})
+            return res.status(400).json({message:"minimal 8 karakter"})
         }
         if(newpassword !== confirmpassword ){
-            return res.json({message:"password dan confirm password beda!"})
+            return res.status(400).json({message:"password dan confirm password beda!"})
         }
 
         try {
@@ -164,9 +164,9 @@ module.exports={
             users.password = hashPassword
             await users.save()
 
-            return res.json({message:"password baru berhasil di buat!"})
+            return res.status(200).json({message:"password baru berhasil di buat!"})
         } catch (error) {
-            return res.json({message:"error server"})
+            return res.status(500).json({message:"error server"})
         }
 
     }
