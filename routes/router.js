@@ -40,6 +40,8 @@ router.get("/keranjang/:iduser",verify,user.keranjang)
     router.get("/dashboard/totalproduk/:iduser",verify,user.totalproduk)
     router.get("/dashboard/totalprodukterjual/:iduser",verify,user.totalprodukterjual)
     router.post("/dashboard/totalpendapatan/:iduser",verify,user.totalpendapatan)
+    router.get("/dashboard/verifikasi/:iduser",verify,user.getverifikasi)
+    router.put("/dashboard/verifikasi/:iduser",verify,user.verifikasi)
 
 // 
 

@@ -4,11 +4,13 @@ const bodyParser = require("body-parser")
 const db = require("./config/database")
 const router = require("./routes/router")
 const cors = require("cors")
+const cookieParser = require("cookie-parser")
 const path = require("path")
 port = 1000
 
 
 app.use(cors())
+app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:true}))
 app.use(router)
