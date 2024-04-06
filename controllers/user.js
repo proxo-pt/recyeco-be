@@ -11,6 +11,33 @@ const { status } = require("./admin")
 
 module.exports = {
 
+    search:async(req,res)=>{
+        const {search} = req.body
+        try {
+            const produk = await postingan.findAll({
+                where:{
+                    judul:{
+                        [Op.substring]:search
+                    }
+                },
+                attributes:[
+                    "foto",
+                    "penjual",
+                    "jenis",
+                    "judul",
+                    "harga",]
+            })
+            if(produk.length<1){
+                return res.status(403).json({message:"postingan tidak ada"})
+            }
+
+            return res.status(200).json({postingan:produk})
+        } catch (error) {
+            return res.status(500).json({message:"eror"})
+        }
+
+    },
+
     logout:async(req,res)=>{
         const {iduser} = req.params
         try {
