@@ -17,6 +17,7 @@ router.get("/profil",user.getprofil)
 router.get("/postingan",user.postingan) 
 router.get("/postingan/postinganByJenis",user.postinganByJenis)
 router.get("/postingan/detailPostingan",user.detailPostingan)
+router.get("/postingan/search",user.search)
 
 
 //user login
@@ -41,7 +42,7 @@ router.get("/keranjang/:iduser",verify,user.keranjang)
     router.get("/dashboard/totalprodukterjual/:iduser",verify,user.totalprodukterjual)
     router.post("/dashboard/totalpendapatan/:iduser",verify,user.totalpendapatan)
     router.get("/dashboard/verifikasi/:iduser",verify,user.getverifikasi)
-    router.put("/dashboard/verifikasi/:iduser",verify,user.verifikasi)
+    router.put  ('/dashboard/verifikasi/:idverif/:iduser', verify,user.verifikasi);
 
 // 
 

@@ -35,7 +35,7 @@ module.exports={
                 email:email,
                 password:hashPassword,
             })
-            return res.status(200).json({message:"registrasi berhasil",data:akun})
+            return res.status(201).json({message:"registrasi berhasil",data:akun})
         } catch (error) {
             console.log(error)
             return res.status(500).send(error)            
@@ -64,11 +64,11 @@ module.exports={
                     email:email
                 }})
             if(!usernames){
-                return res.status(400).json({message:"email tidak terdaftar"})
+                return res.status(404).json({message:"email tidak terdaftar"})
             }
             const passwords = await bcrypt.compare(password, usernames.password)
             if(!passwords){
-                return res.status(400).json({message:"password salah!"})
+                return res.status(404).json({message:"password salah!"})
     }
             //create jwt
             const token=jwt.sign({

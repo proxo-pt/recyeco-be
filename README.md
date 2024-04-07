@@ -60,6 +60,7 @@ Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express 
 
    cara penggunaanya misal localhost:1000/endpoint
 
+# AUTH
 ## login
    **endpoint : /login**
    
@@ -121,5 +122,66 @@ Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express 
    {
       "newpassword":"newpassword",
       "confirmpassword":"confirmpassword",
+   }
+   ```
+
+# PROFIL
+## myprofil
+
+   **endpoint : /profil/:iduser**
+
+   **method : GET**
+
+   **Request params : {iduser}**
+
+## ADD Tempat Tanggal Lahir
+
+   **endpoint  : /profil/:iduser/addttl**
+
+   **method : POST**
+
+   **Request body :**
+   ```json
+   {
+      "ttl":""
+   }
+   ```
+
+## ADD Jenis Kelamin
+
+   **endpoint  : /profil/:iduser/addjk**
+
+   **method : POST**
+
+   **Request body :**
+   ```json
+   {
+      "jk":""
+   }
+   ```
+
+## Edit USERNAME
+
+   **endpoint  : /profil/:iduser/editusername**
+
+   **method : PUT**
+
+   **Request body :**
+   ```json
+   {
+      "username":""
+   }
+   ```
+
+## Edit Email
+
+   **endpoint  : /profil/:iduser/editemail**
+
+   **method : PUT**
+
+   **Request body :**
+   ```json
+   {
+      "email":""
    }
    ```

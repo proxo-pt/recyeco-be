@@ -10,7 +10,7 @@ const verifikasi = db.define(
         },
         idpostingan:{
             type:DataTypes.INTEGER
-        }
+        },
     },{
         freezeTableName:true
     }
