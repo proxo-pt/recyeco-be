@@ -558,7 +558,7 @@ module.exports = {
   },
 
   myprofil: async (req, res) => {
-    const { iduser } = req.params;
+    const { id: iduser } = req.akun;
     try {
       const response = await user.findByPk(iduser, {
         attributes: ["email", "username", "foto", "point", "ttl", "jk"],

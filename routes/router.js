@@ -21,7 +21,7 @@ router.get("/postingan/search", user.search);
 
 //user login
 router.post("/logout/:iduser", verify, user.logout);
-router.get("/profil/:iduser", verify, user.myprofil);
+router.get("/profile", verify, user.myprofil);
 router.put("/profil/:iduser", verify, user.updateProfile);
 router.post(
   "/profil/:iduser/addfoto",
