@@ -30,6 +30,7 @@ router.post("/profil/:iduser/addjk",verify,user.addjk)
 router.post("/profil/:iduser/addfoto",verify,upload.single("foto"),user.addfoto)
 router.post("/postingan/addkeranjang/:iduser",verify,user.addKeranjang)
 router.get("/keranjang/:iduser",verify,user.keranjang)
+router.post("/daftartoko/:iduser",verify,user.daftartoko)
 
     //jual
     router.post("/addpostingan/:iduser",verify,upload.single("foto"),user.addpostingan)
@@ -42,8 +43,8 @@ router.get("/keranjang/:iduser",verify,user.keranjang)
     router.get("/dashboard/totalprodukterjual/:iduser",verify,user.totalprodukterjual)
     router.post("/dashboard/totalpendapatan/:iduser",verify,user.totalpendapatan)
     router.get("/dashboard/verifikasi/:iduser",verify,user.getverifikasi)
-    router.put  ('/dashboard/verifikasi/:idverif/:iduser', verify,user.verifikasi);
-
+    router.post('/dashboard/verifikasi/:idverif/:iduser', verify,user.verifikasi);
+    router.get("/dashboard/allverif",user.veri)
 // 
 
 //admin
