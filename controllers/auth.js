@@ -72,8 +72,7 @@ module.exports={
     }
             //create jwt
             const token=jwt.sign({
-                id:usernames.id,
-                username:usernames.username
+                id:usernames.id
             },
             "qwertyuiop",
             {expiresIn:'1d'})

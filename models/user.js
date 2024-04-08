@@ -22,7 +22,7 @@ const User = db.define(
         type:DataTypes.STRING
     },
     role:{
-        type:DataTypes.ENUM("Admin","User"),
+        type:DataTypes.ENUM("toko","User"),
         defaultValue: "user"
     },
     point:{

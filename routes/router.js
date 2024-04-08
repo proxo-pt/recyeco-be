@@ -13,7 +13,6 @@ router.post("/sendemail",auth.sendemail)
 router.put("/resetpassword/:iduser",auth.resetpassword)
 
 //user no login
-router.get("/profil",user.getprofil)
 router.get("/postingan",user.postingan) 
 router.get("/postingan/postinganByJenis",user.postinganByJenis)
 router.get("/postingan/detailPostingan",user.detailPostingan)
@@ -21,29 +20,26 @@ router.get("/postingan/search",user.search)
 
 
 //user login
-router.post("/logout/:iduser",verify,user.logout)
-router.get("/profil/:iduser",verify,user.myprofil)
-router.put("/profil/:iduser/editusername",verify,user.editusername)
-router.put("/profil/:iduser/editemail",verify,user.editemail)
-router.post("/profil/:iduser/addttl",verify,user.addttl)
-router.post("/profil/:iduser/addjk",verify,user.addjk)
-router.post("/profil/:iduser/addfoto",verify,upload.single("foto"),user.addfoto)
-router.post("/postingan/addkeranjang/:iduser",verify,user.addKeranjang)
-router.get("/keranjang/:iduser",verify,user.keranjang)
-router.post("/daftartoko/:iduser",verify,user.daftartoko)
+router.post("/logout/",verify,user.logout)
+router.get("/profil",verify,user.myprofil)
+router.put("/profil/edit",verify,upload.single("foto"),user.edituser)
+router.post("/postingan/addkeranjang",verify,user.addKeranjang)
+router.get("/keranjang",verify,user.keranjang)
+router.post("/daftartoko",verify,user.daftartoko)
+
 
     //jual
-    router.post("/addpostingan/:iduser",verify,upload.single("foto"),user.addpostingan)
-    router.get("/manajemenProduk/:iduser",verify,user.myPostingan)
+    router.post("/addpostingan",verify,upload.single("foto"),user.addpostingan)
+    router.get("/manajemenProduk",verify,user.myPostingan)
     //beli
-    router.post("/postingan/detailPostingan/:idpostingan/beli/:iduser",verify,user.beli)
+    router.post("/postingan/detailPostingan/beli/:idpostingan",verify,user.beli)
 
     //dashboard
-    router.get("/dashboard/totalproduk/:iduser",verify,user.totalproduk)
-    router.get("/dashboard/totalprodukterjual/:iduser",verify,user.totalprodukterjual)
-    router.post("/dashboard/totalpendapatan/:iduser",verify,user.totalpendapatan)
-    router.get("/dashboard/verifikasi/:iduser",verify,user.getverifikasi)
-    router.post('/dashboard/verifikasi/:idverif/:iduser', verify,user.verifikasi);
+    router.get("/dashboard/totalproduk",verify,user.totalproduk)
+    router.get("/dashboard/totalprodukterjual",verify,user.totalprodukterjual)
+    router.post("/dashboard/totalpendapatan",verify,user.totalpendapatan)
+    router.get("/dashboard/verifikasi",verify,user.getverifikasi)
+    router.put('/dashboard/verifikasi/:idverif', verify,user.verifikasi);
     router.get("/dashboard/allverif",user.veri)
 // 
 

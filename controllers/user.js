@@ -7,7 +7,10 @@ const event = require("../models/event")
 const keranjang = require("../models/keranjang")
 const {Op, where} = require("sequelize")
 const verifikasi = require("../models/verifikasi")
+const tokos = require("../models/toko")
 const { status } = require("./admin")
+const { response } = require("express")
+const toko = require("../models/toko")
 
 module.exports = {
 
@@ -39,13 +42,12 @@ module.exports = {
     },
 
     logout:async(req,res)=>{
-        const {iduser} = req.params
+        const {id:iduser} = req.akun
         try {
-            const token = await user.findByPk(iduser)
-            token.token = null
-            await token.save()
 
-            res.clearCookie("token")
+            console.log("tesss",iduser)
+
+            res.clearCookie("token");
             
             return res.status(200).json({message:"berhasil logout!"})
         } catch (error) {
@@ -54,19 +56,23 @@ module.exports = {
     },
 
     myprofil:async(req,res)=>{
-        const {iduser} = req.params;
+        const {id:iduser} = req.akun;
         try {
             const response = await user.findByPk(iduser,{
                 attributes:[
+                    "id",
                     "email",
                     "username",
                     "foto",
-                    "point",
                     "ttl",
                     "jk"
                 ]})
             
-            return res.status(200).json({error:false,page:"myprofile",user:response})
+            return res.status(200).json({
+                error:false,
+                page:"myprofile",
+                user:response
+            })
         } catch (error) {
             return res.status(500).json({message:"error server"})
         }
@@ -94,124 +100,120 @@ module.exports = {
         }
     },
 
-    editusername:async(req,res)=>{
-        const {username} = req.body;
-        const {iduser} = req.params
+    edituser:async(req,res)=>{
+        const {id:iduser} = req.akun
+        const {email,username,ttl,jk} = req.body
+        const foto = req.file 
+
         try {
             const users = await user.findByPk(iduser)
-            console.log(users)
-            if(!users)
-                return res.status(404).json({message:"user not found"})
 
-            await users.update({username:username})
-
-            return res.status(200).json({message:"update username succes"})
-        } catch (error) {
-            return res.status(500).json({message:error})
-        }
-    },
-
-    editemail:async(req,res)=>{
-        const {email} = req.body;
-        const {iduser} = req.params
-
-        if(!email.includes("@")){
-            return res.status(400).json({message:"harus dengan format @"})
-        }
-        try {
-            const users = await user.findByPk(iduser)
-            if(!users)
-                return res.status(404).json({message:"user not found"})
-
-            const cekusers = await user.findAll()
-
-            if(users.email === cekusers.email){
-                return res.status(404).json({message:"email sudah terdaftar"})
+            if(!users){
+                return res.status(404).json({message:"user not found",user:users})
             }
 
-            await users.update({email:email})
+            if(email){
+                await users.update({email:email})
+            }
+            if(username){
+                await users.update({username:username})
+            }
+            if(foto){
+                await users.update({foto:foto.path})
+            }
+            if(ttl){
+                await users.update({ttl:ttl})
+            }
+             if(jk){
+                await users.update({jk:jk})
+            }
 
-            return res.status(200).json({message:"update email succes"})
+            return res.status(200).json({message:"berhasil update!"})
         } catch (error) {
-            return res.status(500).json({message:error})
+            return res.status(500).json({message:"server eror"})
         }
     },
 
-    addttl:async(req,res)=>{
-        const {iduser} = req.params;
-        const {ttl} = req.body;
 
+    daftartoko:async(req,res)=>{
+        const {id:iduser} = req.akun;
+        const {toko,kontak,lokasi}=req.body
+
+        // if(!toko||!kontak||!lokasi){
+        //     return res.status(400).json({message:"kolom tidak boleh ada yang kosong!"})
+        // }
         try {
             const users = await user.findByPk(iduser)
+            if(!users){
+                return res.status(404).json({message:"user not found"})
+            }
 
-            await users.update({
-                ttl:ttl
+            const toko = await tokos.findOne({
+                where:{
+                    pemilik:iduser
+                }
             })
 
-            return res.status(201).json({message:"succes add tempat,tanggal lahir!"})
-        } catch (error) {
-            return res.status(500).json({error})
-        }
-    },
+            if(toko){
+                return res.status(400).json({message:"toko sudah ada!"})
+            }
 
-    addjk:async(req,res)=>{
-        const {iduser} = req.params;
-        const {jk} = req.body;
-
-        try {
-            const users = await user.findByPk(iduser)
-
-            await users.update({
-                jk:jk
+            const response = await tokos.create({
+                pemilik:iduser,
+                toko:toko,
+                kontak:kontak,
+                lokasi:lokasi
             })
 
-            return res.status(201).json({message:"succes add tempat,tanggal lahir!"})
+            return res.status(201).json({message:"berhasil mendaftarkan toko",data_toko:response})
+
         } catch (error) {
-            return res.status(500).json({error})
-        }
-    },
-
-    addfoto:async(req,res)=>{
-        const foto = req.file;
-        const {iduser} = req.params
-        
-        try {
-            const users = await user.findByPk(iduser)
-            if(!users)
-                return res.status(403).json({message:"user not found"})
-
-
-            await users.update({foto:foto.path})
-
-            return res.status(201).json({message:"update foto succes"})
-        } catch (error) {
-            return res.status(500).json({message:error})
+            return res.status(500).json({message:"eror server"})
         }
     },
 
     addpostingan:async(req,res)=>{
-        const {iduser} = req.params;
-        const{judul,jenis,deskripsi,berat,harga,kontak,lokasi,latitude,longitude}= req.body
+        const {id:iduser} = req.akun;
+        const{judul,jenis,deskripsi,berat,harga,lokasi}= req.body
         const foto = req.file
 
-        if(!judul||!jenis||!deskripsi||!berat||!harga||!kontak||!lokasi||!latitude||!longitude){
+        if(!judul||!jenis||!deskripsi||!berat||!harga||!lokasi){
             return res.status(400).json({message:"*kolom harus di isi semua"})
         }
         try {
-            const penjual = await user.findByPk(iduser)
+            const penjuals = await tokos.findOne({
+                where:{
+                    pemilik:iduser
+                },
+                include:[{
+                    model:user,
+                    foreignKey:"pemilik",
+                    attributes:["id","username"]
+                }],
+                attributes:[
+                    "id",
+                    "pemilik",
+                    "toko",
+                    "kontak",
+                    "lokasi"
+                ]
+            })
+
+
+            if(!penjuals){
+                return res.status(400).json({message:"tidak ada toko!"})
+            }
+
             const response = await postingan.create({
                 foto:foto.path,
-                idpenjual:penjual.id,
-                penjual:penjual.username,
+                idpenjual:penjuals.id,
+                penjual:penjuals.toko,
                 judul:judul,
                 jenis:jenis,
                 deskripsi:deskripsi,
                 berat:berat,
                 harga:harga,
-                kontak:kontak,
                 lokasi:lokasi,
-                latitude:latitude,
-                longitude:longitude,
                 status:"tersedia"
             })
             return res.status(201).json({message:"succes",postingan:response})
@@ -304,7 +306,7 @@ module.exports = {
     },
 
     myPostingan:async(req,res)=>{
-        const {iduser} = req.params
+        const {id:iduser} = req.akun
 
         try {
             const response = await postingan.findAll({
@@ -329,7 +331,7 @@ module.exports = {
     },
 
     addKeranjang:async(req,res)=>{
-        const {iduser} = req.params;
+        const {id:iduser} = req.akun;
         const {id} = req.body;
 
         try {
@@ -363,7 +365,7 @@ module.exports = {
     },
 
     keranjang:async(req,res)=>{
-        const {iduser} = req.params;
+        const {id:iduser} = req.akun;
         try {
             const response = await keranjang.findAll({
                 where:{
@@ -393,17 +395,25 @@ module.exports = {
     },
 
     beli:async(req,res)=>{
-
-        const {iduser,idpostingan} = req.params
+        const {id:iduser} = req.akun
+        const {idpostingan} = req.params
 
         try {
-            const users = await user.findByPk(iduser)
+            const users = await toko.findOne({
+                where:{
+                    pemilik:iduser
+                },
+                include:[{
+                    model:user,
+                    foreignKey:"pemilik",
+                }]
+            })
             const response = await postingan.findByPk(idpostingan)
             if(!response){
                 return res.status(403).json({message:"postingan tidak ada!"})
             }
 
-            if(users.id === response.idpenjual){
+            if(users.pemilki === response.idpenjual){
                 return res.status(400).json({message:"nda bisa dong postingan anda sendiri"})
             }
             
@@ -414,7 +424,7 @@ module.exports = {
             await response.update({status:"menunggu"})
 
             const verif = await verifikasi.create({
-                pembeli:users.username,
+                pembeli:users.user.username,
                 idpostingan:idpostingan
             })
 
@@ -426,12 +436,16 @@ module.exports = {
 
 //dashboard
     totalproduk:async(req,res)=>{
-        const {iduser} = req.params;
+        const {id:iduser} = req.akun;
         try {
             const response = await postingan.findAll({
-                where:{
-                    idpenjual:iduser
-                }
+                include:[{
+                    model:toko,
+                    foreignKey:"pemilik",
+                    where:{
+                        pemilik:iduser
+                    }
+                }]
             })
 
             return res.status(200).json({total_produk : response.length})
@@ -441,13 +455,19 @@ module.exports = {
     },
 
     totalprodukterjual:async(req,res)=>{
-        const {iduser} = req.params;
+        const {id:iduser} = req.akun;
         try {
             const response = await postingan.findAll({
                 where:{
-                    idpenjual:iduser,
                     status:"terjual"
-                }
+                },
+                include:[{
+                    model:toko,
+                    foreignKey:"pemilik",
+                    where:{
+                        pemilik:iduser
+                    }
+                }]
             })
 
             return res.status(200).json({total_produk : response.length})
@@ -457,14 +477,20 @@ module.exports = {
     },
 
     totalpendapatan:async(req,res)=>{
-        const {iduser} = req.params;
+        const {id:iduser} = req.akun;
 
         try {
             const total = await postingan.sum("harga",{
                 where:{
-                    idpenjual:iduser,
                     status:"terjual"
-                }
+                },
+                include:[{
+                    model:toko,
+                    foreignKey:"pemilik",
+                    where:{
+                        pemilik:iduser
+                    }
+                }]
             })
 
             
@@ -474,8 +500,30 @@ module.exports = {
         }
     },
 
+    veri:async(req,res)=>{
+        try {
+            const response = await verifikasi.findAll({
+                attributes:["id","pembeli"],
+                include:[{
+                    model:postingan,
+                    foreignKey:"idpostingan",
+                    attributes:[
+                        "judul",
+                        "berat",
+                        "harga",
+                        "status"
+                    ]
+                }]
+            })
+
+            return res.status(200).json({verifikasi:response})
+        } catch (error) {
+            return res.status(500)
+        }
+
+    },
     getverifikasi:async(req,res)=>{
-        const {iduser} = req.params;
+        const {id:iduser} = req.akun;
         try {
             const verif = await verifikasi.findAll({
                 attributes:["id","pembeli"],
@@ -483,14 +531,21 @@ module.exports = {
                     model:postingan,
                     foreignKey:"idpostingan",
                     where:{
-                        idpenjual:iduser,
                         status:"menunggu"
                     },
-                    attributes:[
-                        "judul",
+                    include:[{
+                        model:toko,
+                        foreignKey:"idpenjual",
+                        attributes:[],
+                        where:{
+                            pemilik:iduser
+                        }
+                    }],
+                    attributes: [
+                        "judul", 
                         "berat",
-                        "harga",
-                        "status"]
+                         "harga", 
+                         "status"],
                 }]
             })
 
@@ -501,51 +556,59 @@ module.exports = {
     },
 
     verifikasi: async (req, res) => {
-        const { iduser ,idverif} = req.params;
+        const {id:iduser} = req.akun
+        const { idverif} = req.params;
         const { aksi } = req.body;
         try {
-          const verif = await verifikasi.findByPk(idverif,{
+            const verif = await verifikasi.findByPk(idverif,{
             attributes: ["id","pembeli"],
             include: [{
-              model: postingan,
-              foreignKey: "idpostingan",
-              where: {
-                idpenjual: iduser,
+                model: postingan,
+                foreignKey: "idpostingan",
+                where: {
                 status: "menunggu"
-              }
+            },
+                include:[{
+                    model:toko,
+                    foreignKey:"pemilik",
+                    where:{
+                        pemilik:iduser
+                    },
+                    attributes:[]
+                }],                    
+                attributes: [
+                    "judul",
+                     "berat", 
+                     "harga", 
+                     "status"],
             }]
-          })
+        })
 
-          const verifi = await verifikasi.findAll({
-            attributes: ["id","pembeli"],
-            include: [{
-              model: postingan,
-              foreignKey: "idpostingan",
-              where: {
-                idpenjual: iduser,
-                status: "menunggu"
-              }
-            }]
-          })
       
-          if (!verif) {
+        if (!verif) {
             return res.status(404).json({ message: "Tidak ada verifikasi!" })
+            }
+            
+          if (aksi === "setuju") {
+                try{
+            await verif.postingan.update({ status: "terjual" });
+            await verif.destroy()
+            return res.status(200).json({ message: "Berhasil terjual!", verif: verif });
+                }
+                catch(error){
+                return res.status(500).json({ message: "Terjadi kesalahan saat menerima verifikasi" ,error:error});
+                }
           }
-        //   if (aksi === "setuju") {
-        //     await verif.postingan.update({ status: "terjual" });
-        //     await verifi.destroy()
-        //     return res.status(200).json({ message: "Berhasil terjual!", verif: verif });
-        //   }
           if (aksi === "tolak") {
             try {
-            await verifi.destroy()
+            await verif.destroy()
               return res.status(200).json({ message: "Berhasil menolak!" });
             } catch (error) {
               return res.status(500).json({ message: "Terjadi kesalahan saat menolak verifikasi" });
             }
           }
       
-          return res.status(400).json({ message: "Aksi tidak valid" ,verif:verif,verifi:verifi})
+          return res.status(400).json({ message: "Aksi tidak valid" ,verif:verif})
         } catch (error) {
           return res.status(500).json({ message: "Error server" });
         }

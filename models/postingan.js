@@ -1,6 +1,6 @@
 const { Sequelize , DataTypes} = require("sequelize")
 const db = require("../config//database")
-const user = require("../models/user")
+const toko = require("../models/toko")
 
 const postingan = db.define(
     "postingan",
@@ -26,20 +26,11 @@ const postingan = db.define(
         harga:{
             type:DataTypes.INTEGER
         },
-        kontak:{
-            type:DataTypes.STRING
-        },
         foto:{
             type:DataTypes.STRING
         },
         lokasi:{
             type:DataTypes.STRING
-        },
-        latitude:{
-            type:DataTypes.DECIMAL
-        },
-        longitude:{
-            type:DataTypes.DECIMAL
         },
         status:{
             type:DataTypes.ENUM("tersedia","terjual","menunggu")
@@ -48,7 +39,7 @@ const postingan = db.define(
         freezeTableName:true
     }
 )
-postingan.belongsTo(user,{foreignKey:"idpenjual"})
+postingan.belongsTo(toko,{foreignKey:"idpenjual"})
 
 
 module.exports=postingan
