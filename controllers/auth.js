@@ -12,7 +12,7 @@ module.exports={
             return res.status(400).json({message:"username,email,password,foto,tempat tanggal lahir,jenis kelamin tidak boleh kosong!"})
         }       
         if(password.length < 8){
-            return res.status(400).json({message:"minimal 8 karakter"})
+            return res.status(400).json({message:"password minimal 8 karakter"})
         }
         if(!email.includes("@")){
             return res.status(400).json({message:"harus dengan format @"})

@@ -3,7 +3,7 @@ const user = require("../models/user")
 
 module.exports = async (req, res, next) => {
 
-    const token = req.headers.authorization;
+    const token = req.cookies.token;
 
     if(!token){
     return res.status(404).json({message:"incorrect credential"})

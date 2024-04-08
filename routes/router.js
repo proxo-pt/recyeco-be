@@ -41,7 +41,9 @@ router.post("/daftartoko",verify,user.daftartoko)
     router.get("/dashboard/verifikasi",verify,user.getverifikasi)
     router.put('/dashboard/verifikasi/:idverif', verify,user.verifikasi);
     router.get("/dashboard/allverif",user.veri)
-// 
+
+    //manejemen produk
+     router.get("/manajemen",verify,user.manajemen)
 
 //admin
 router.get("/status",admin.status)

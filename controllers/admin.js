@@ -3,7 +3,6 @@ const bcrypt = require("bcrypt")
 const postingan = require("../models/postingan")
 const riwayat = require("../models/riwayat")
 const tukarpoint = require("../models/tukarpoint")
-const event = require("../models/event")
 const keranjang = require("../models/keranjang")
 const {Op} = require("sequelize")
 
