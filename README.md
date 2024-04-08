@@ -132,9 +132,7 @@ Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express 
 
    **method : GET**
 
-   **Request params : {iduser}**
-
-## AEdit Profil
+## Edit Profil
 
    **endpoint  : /profil/edit**
 
@@ -151,4 +149,37 @@ Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express 
    }
    ```
 
-   
+# yuhu
+## daftar toko
+
+   **endpoint  :  /daftartoko**
+
+   **method :  POST**
+
+   **Request body :**
+   ```json
+   {
+      "foto":"",
+      "kontak":"",
+      "lokasi"
+   }
+   ```
+
+## ADD Postingan
+
+   **endpoint  :  /addpostingan**
+
+   **method :  POST**
+
+   **Request body(body-form) :**
+   ```json
+   {
+      "judul":"",
+      "jenis":"",
+      "deskripsi":"",
+      "berat":"",
+      "harga":"",
+      "lokasi":"",
+      "foto":""
+   }
+   ```
