@@ -21,7 +21,7 @@ router.get("/postingan/search",user.search)
 
 //user login
 router.post("/logout/",verify,user.logout)
-router.get("/profil",verify,user.myprofil)
+router.get("/profile",verify,user.myprofil)
 router.put("/profil/edit",verify,upload.single("foto"),user.edituser)
 router.post("/postingan/addkeranjang",verify,user.addKeranjang)
 router.get("/keranjang",verify,user.keranjang)
@@ -37,7 +37,7 @@ router.post("/daftartoko",verify,user.daftartoko)
     //dashboard
     router.get("/dashboard/totalproduk",verify,user.totalproduk)
     router.get("/dashboard/totalprodukterjual",verify,user.totalprodukterjual)
-    router.post("/dashboard/totalpendapatan",verify,user.totalpendapatan)
+    router.get("/dashboard/totalpendapatan",verify,user.totalpendapatan)
     router.get("/dashboard/verifikasi",verify,user.getverifikasi)
     router.put('/dashboard/verifikasi/:idverif', verify,user.verifikasi);
     router.get("/dashboard/allverif",user.veri)
