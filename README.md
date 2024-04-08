@@ -134,54 +134,21 @@ Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express 
 
    **Request params : {iduser}**
 
-## ADD Tempat Tanggal Lahir
+## AEdit Profil
 
-   **endpoint  : /profil/:iduser/addttl**
+   **endpoint  : /profil/edit**
 
-   **method : POST**
+   **method : PUT**
 
-   **Request body :**
+   **Request body(form-data) :**
    ```json
    {
-      "ttl":""
-   }
-   ```
-
-## ADD Jenis Kelamin
-
-   **endpoint  : /profil/:iduser/addjk**
-
-   **method : POST**
-
-   **Request body :**
-   ```json
-   {
+      "email":"",
+      "username":"",
+      "ttl":"",
+      "foto":"",
       "jk":""
    }
    ```
 
-## Edit USERNAME
-
-   **endpoint  : /profil/:iduser/editusername**
-
-   **method : PUT**
-
-   **Request body :**
-   ```json
-   {
-      "username":""
-   }
-   ```
-
-## Edit Email
-
-   **endpoint  : /profil/:iduser/editemail**
-
-   **method : PUT**
-
-   **Request body :**
-   ```json
-   {
-      "email":""
-   }
-   ```
+   
