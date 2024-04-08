@@ -25,16 +25,13 @@ const User = db.define(
         type:DataTypes.ENUM("toko","User"),
         defaultValue: "user"
     },
-    point:{
-        type:DataTypes.INTEGER
-    },
     token:{
         type:DataTypes.STRING
     },
-    ttl:{
+    birthdate:{
         type:DataTypes.STRING
     },
-    jk:{
+    gender:{
         type:DataTypes.STRING
     }
 },{
