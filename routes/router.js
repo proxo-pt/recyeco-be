@@ -28,7 +28,7 @@ router.get("/keranjang",verify,user.keranjang)
 router.post("/daftartoko",verify,user.daftartoko)
 
 
-    //jual
+    //toko
     router.post("/addpostingan",verify,upload.single("foto"),user.addpostingan)
     router.get("/manajemenProduk",verify,user.myPostingan)
     //beli
@@ -40,7 +40,6 @@ router.post("/daftartoko",verify,user.daftartoko)
     router.get("/dashboard/totalpendapatan",verify,user.totalpendapatan)
     router.get("/dashboard/verifikasi",verify,user.getverifikasi)
     router.put('/dashboard/verifikasi/:idverif', verify,user.verifikasi);
-    router.get("/dashboard/allverif",user.veri)
 
     //manejemen produk
      router.get("/manajemen",verify,user.manajemen)
