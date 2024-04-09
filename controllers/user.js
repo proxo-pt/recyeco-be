@@ -118,7 +118,7 @@ module.exports = {
                 await users.update({username:username})
             }
             if(foto){
-                const fotoPath = `http://localhost:1000/${foto.path}`;
+                const fotoPath = `${req.protocol}://${req.get('host')}/${foto.path}`;
                 await users.update({ foto: fotoPath });
             }
             if(birthdate){
