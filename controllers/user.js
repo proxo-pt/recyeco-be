@@ -118,7 +118,8 @@ module.exports = {
                 await users.update({username:username})
             }
             if(foto){
-                await users.update({foto:foto.path})
+                const fotoPath = `http://localhost:1000/${foto.path}`;
+                await users.update({ foto: fotoPath });
             }
             if(birthdate){
                 await users.update({birthdate:birthdate})
@@ -269,7 +270,7 @@ module.exports = {
                 postingan:response
             })
         } catch (error) {
-            return res.status(500).json({message:error})
+            return res.status(500).json({message:"eror server"})
         }
     },
 
@@ -360,6 +361,14 @@ module.exports = {
             const produk = await postingan.findByPk(id)
             if(!produk){
                 return res.status(403).json({message:"postingan tidak ada!"})
+            }
+            const toko = await tokos.findAll({
+                where:{
+                    pemilik:iduser
+                }
+            })
+            if(toko){
+                return res.status(400).json({message:"tidak bisa menambah postingan sendiri ke keranjang"})
             }
             const keranjangs = await keranjang.findOne({
                 where:{
@@ -528,28 +537,6 @@ module.exports = {
         }
     },
 
-    veri:async(req,res)=>{
-        try {
-            const response = await verifikasi.findAll({
-                attributes:["id","pembeli"],
-                include:[{
-                    model:postingan,
-                    foreignKey:"idpostingan",
-                    attributes:[
-                        "judul",
-                        "berat",
-                        "harga",
-                        "status"
-                    ]
-                }]
-            })
-
-            return res.status(200).json({verifikasi:response})
-        } catch (error) {
-            return res.status(500)
-        }
-
-    },
     getverifikasi:async(req,res)=>{
         const {id:iduser} = req.akun;
         try {
@@ -635,6 +622,7 @@ module.exports = {
         }
     },
 
+//manajemen produk    
     manajemen:async(req,res)=>{
         const {id:iduser} = req.akun
         try {
