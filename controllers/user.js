@@ -239,28 +239,46 @@ module.exports = {
 
     postingan:async(req,res)=>{
         try {
-            const response = await postingan.findAll({
-                where: {
-                    status: {
-                    [Op.not]: "terjual"
-                }
+            const page = parseInt(req.query.page) || 1; 
+            const limit = parseInt(req.query.limit) || 2;
+            const offset = (page - 1) * limit; 
+        
+            const response = await postingan.findAndCountAll({
+              where: {
+                status: {
+                  [Op.not]: "terjual",
                 },
-                attributes: [
-                "foto",
+              },
+              attributes: [
+                "foto", 
                 "penjual",
-                "jenis",
-                "judul",
-                "harga"
-                ],
-                });
+                 "jenis", 
+                 "judul", 
+                 "harga"],
+
+              limit,
+              offset,
+            });
+
+        
+            const { count, rows } = response;
+        
+            const totalPages = Math.ceil(count / limit); // Total halaman
+            const hasNextPage = page < totalPages; // Apakah ada halaman berikutnya
         
             return res.status(200).json({
-                message: "success",
-                postingan:response
+              message: "success",
+              infoHalaman: {
+                Halaman: page,
+                total_Halaman:totalPages,
+                halaman_berikut:hasNextPage,
+              },
+              postingan: rows,
+
             });
-            } catch (error) {
-                return res.status(500).json({ message: error });
-            }
+          } catch (error) {
+            return res.status(500).json({ message: error });
+          }
     },
 
     postinganByJenis:async(req,res)=>{
