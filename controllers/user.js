@@ -66,11 +66,10 @@ module.exports = {
                     "birthdate",
                     "gender"
                 ]})
-            const cleanUrl = response?.foto.replace(/\\/g, '/').replace(/(http:\/)(\/+)/g, '$1/');
             return res.status(200).json({
                 error:false,
                 page:"myprofile",
-                user:{...response.dataValues, foto: cleanUrl}
+                user:response
             })
         } catch (error) {
             return res.status(500).json({message:"error server"})
@@ -103,8 +102,20 @@ module.exports = {
         const {email,username,gender,birthdate} = req.body
         const foto = req.file 
 
+        if(!email.includes('@') && email !== ''){
+            return res.status(400).json({message:"email harus dengan format @"})
+        }
         try {
             const users = await user.findByPk(iduser)
+            const akun = await user.findOne({
+                where:{
+                    email:email
+                }
+            })
+
+            if(akun){
+                return res.status(400).json({message:"email sudah terdaftar!"})
+            }
 
             if(!users){
                 return res.status(404).json({message:"user not found",user:users})
@@ -118,7 +129,8 @@ module.exports = {
             }
             if(foto){
                 const fotoPath = `${req.protocol}://${req.get('host')}/${foto.path}`;
-                await users.update({ foto: fotoPath });
+                const fotos = fotoPath.replace(/\\/g, '/')
+                await users.update({ foto: fotos });
             }
             if(birthdate){
                 await users.update({birthdate:birthdate})
