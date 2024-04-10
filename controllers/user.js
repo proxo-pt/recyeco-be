@@ -101,10 +101,7 @@ module.exports = {
         const {id:iduser} = req.akun
         const {email,username,gender,birthdate} = req.body
         const foto = req.file 
-
-        if(!email.includes('@') && email !== ''){
-            return res.status(400).json({message:"email harus dengan format @"})
-        }
+        
         try {
             const users = await user.findByPk(iduser)
             const akun = await user.findOne({
@@ -122,6 +119,9 @@ module.exports = {
             }
 
             if(email){
+                if(!email.includes('@')){
+                    return res.status(400).json({message:"email harus dengan format @"})
+                }
                 await users.update({email:email})
             }
             if(username){
