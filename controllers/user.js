@@ -188,6 +188,28 @@ module.exports = {
         }
     },
 
+    getTokoById: async (req, res) => {
+        const { id: iduser } = req.akun;
+    
+        try {
+          // Cari toko berdasarkan pemilik (ID pengguna)
+          const toko = await tokos.findOne({
+            where: {
+              pemilik: iduser,
+            },
+            attributes: ["id", "toko", "kontak", "lokasi", "link_map"],
+          });
+    
+          if (!toko) {
+            return res.status(404).json({ message: "Toko tidak ditemukan" });
+          }
+    
+          return res.status(200).json({ message: "Sukses", dataToko: toko });
+        } catch (error) {
+          return res.status(500).json({ message: "Error server", error: error });
+        }
+      },
+
     addpostingan:async(req,res)=>{
         const {id:iduser} = req.akun;
         const{judul,jenis,deskripsi,berat,harga}= req.body
