@@ -10,7 +10,7 @@ const admin = require("../controllers/admin")
 router.post("/register",upload.single("foto"), auth.register)
 router.post("/login",auth.login)
 router.post("/sendemail",auth.sendemail)
-router.put("/resetpassword/:iduser",auth.resetpassword)
+router.put("/resetpassword",verify,auth.resetpassword)
 
 //user no login
 router.get("/postingan",user.postingan) 
@@ -25,7 +25,7 @@ router.get("/profile",verify,user.myprofil)
 router.put("/profil/edit",verify,upload.single("foto"),user.edituser)
 router.post("/postingan/addkeranjang",verify,user.addKeranjang)
 router.get("/keranjang",verify,user.keranjang)
-router.post("/daftartoko",verify,user.daftartoko)
+router.post("/daftartoko",verify,upload.single("foto"),user.daftartoko)
 
 
     //toko
@@ -43,6 +43,7 @@ router.post("/daftartoko",verify,user.daftartoko)
 
     //manejemen produk
      router.get("/manajemen",verify,user.manajemen)
+     router.get("/manajemen/search",verify,user.searchproduk)
 
 //admin
 router.get("/status",admin.status)

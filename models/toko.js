@@ -16,6 +16,9 @@ const toko = db.define(
         },
         lokasi:{
             type:DataTypes.STRING
+        },
+        link_map:{
+            type:DataTypes.STRING
         }
     },{
         freezeTableName:true

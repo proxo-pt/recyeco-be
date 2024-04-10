@@ -101,7 +101,9 @@ module.exports = {
         const {id:iduser} = req.akun
         const {email,username,gender,birthdate} = req.body
         const foto = req.file 
-        
+
+
+
         try {
             const users = await user.findByPk(iduser)
             const akun = await user.findOne({
@@ -148,11 +150,11 @@ module.exports = {
 
     daftartoko:async(req,res)=>{
         const {id:iduser} = req.akun;
-        const {toko,kontak,lokasi}=req.body
+        const {toko,kontak,lokasi,link_map}=req.body
 
-        // if(!toko||!kontak||!lokasi){
-        //     return res.status(400).json({message:"kolom tidak boleh ada yang kosong!"})
-        // }
+        if(!toko||!kontak||!lokasi||!link_map){
+            return res.status(400).json({message:"kolom tidak boleh ada yang kosong!"})
+        }
         try {
             const users = await user.findByPk(iduser)
             if(!users){
@@ -168,12 +170,14 @@ module.exports = {
             if(tokoo){
                 return res.status(400).json({message:"toko sudah ada!"})
             }
-
+            // const fotoPath = `${req.protocol}://${req.get('host')}/${foto.path}`;
+            // const fotos = fotoPath.replace(/\\/g, '/')
             const response = await tokos.create({
                 pemilik:iduser,
                 toko:toko,
                 kontak:kontak,
-                lokasi:lokasi
+                lokasi:lokasi,
+                link_map:link_map
             })
 
             return res.status(201).json({message:"berhasil mendaftarkan toko",data_toko:response})
@@ -236,26 +240,27 @@ module.exports = {
     postingan:async(req,res)=>{
         try {
             const response = await postingan.findAll({
-                where:{
-                    status:{
-                        [Op.not]:"terjual"
-                    }
+                where: {
+                    status: {
+                    [Op.not]: "terjual"
+                }
                 },
-                attributes:[
-                    "foto",
-                    "penjual",
-                    "jenis",
-                    "judul",
-                    "harga",]
-            })
-
+                attributes: [
+                "foto",
+                "penjual",
+                "jenis",
+                "judul",
+                "harga"
+                ],
+                });
+        
             return res.status(200).json({
-                message:"succes",
+                message: "success",
                 postingan:response
-            })
-        } catch (error) {
-            return res.status(500).json({message:error})
-        }
+            });
+            } catch (error) {
+                return res.status(500).json({ message: error });
+            }
     },
 
     postinganByJenis:async(req,res)=>{
@@ -447,6 +452,7 @@ module.exports = {
                 include:[{
                     model:user,
                     foreignKey:"pemilik",
+                    attributes:[]
                 }]
             })
             const response = await postingan.findByPk(idpostingan,{
@@ -671,6 +677,41 @@ module.exports = {
         } catch (error) {
             return res.status(500).json({message:"eror server"})
         }
-    }
+    },
+    searchproduk:async(req,res)=>{
+        const {id:iduser} = req.akun
+        const {search} = req.body
+        try {
+            const produk = await postingan.findAll({
+                where:{
+                    judul:{
+                        [Op.substring]:search
+                    }
+                },
+                attributes:[
+                    "foto",
+                    "penjual",
+                    "jenis",
+                    "judul",
+                    "harga",],
+                include:[{
+                    model:toko,
+                    foreignKey:"pemilik",
+                    where:{
+                        pemilik:iduser
+                    },attributes:[]
+                }]
+            })
+
+            if(produk.length<1){
+                return res.status(404).json({message:"postingan tidak ada"})
+            }
+
+            return res.status(200).json({postingan:produk})
+        } catch (error) {
+            return res.status(500).json({message:"eror"})
+        }
+
+    },
 
 }

@@ -148,7 +148,7 @@ module.exports={
 
     resetpassword:async(req,res)=>{
         const {newpassword,confirmpassword} = req.body
-        const {iduser} = req.params
+        const {id:iduser} = req.akun
 
         if(newpassword.length < 8){
             return res.status(400).json({message:"minimal 8 karakter"})
