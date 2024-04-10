@@ -66,11 +66,11 @@ module.exports = {
                     "birthdate",
                     "gender"
                 ]})
-            
+            const cleanUrl = response?.foto.replace(/\\/g, '/').replace(/(http:\/)(\/+)/g, '$1/');
             return res.status(200).json({
                 error:false,
                 page:"myprofile",
-                user:response
+                user:{...response.dataValues, foto: cleanUrl}
             })
         } catch (error) {
             return res.status(500).json({message:"error server"})
@@ -92,7 +92,6 @@ module.exports = {
             if(!response){
                 return res.status(404).json({message:"user not found"})
             }
-
             return res.status(200).json({message:"succes",profil:response})
         } catch (error) {
             return res.status(500).json({Message:"error server"})
