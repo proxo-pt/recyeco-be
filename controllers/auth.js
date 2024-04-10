@@ -101,7 +101,11 @@ module.exports={
                     email:email
                 }
             })
-
+            const token=jwt.sign({
+                id:users.id
+            },
+            "qwertyuiop",
+            {expiresIn:'1d'})
             if(!users){
                 return res.status(403).json({message:"email not found"})
             }
@@ -110,7 +114,7 @@ module.exports={
                 <p>Halo,kami menerima permintaan untuk mengatur ulang kata sandi akun Anda. Untuk melanjutkan proses pengaturan ulang kata sandi,<br>
 
                 Klik tautan verifikasi di bawah ini:</p>
-                <a href="http://localhost:1000/" target="_blank" style="display:inline-block;padding:10px 20px;background-color:#007bff;color:#fff;text-decoration:none;border-radius:5px; text-align:center;">Verifikasi Akun</a>
+                <a href="http://localhost:3000/forget-newpass?param=${token}" target="_blank" style="display:inline-block;padding:10px 20px;background-color:#007bff;color:#fff;text-decoration:none;border-radius:5px; text-align:center;">Verifikasi Akun</a>
                 
                 <p>Setelah tautan verifikasi berhasil diakses, Anda akan diarahkan ke halaman pengaturan ulang kata sandi.<br>
                 
@@ -162,7 +166,7 @@ module.exports={
             const hashPassword = await bcrypt.hash(newpassword,10)
             users.password = hashPassword
             await users.save()
-
+            
             return res.status(200).json({message:"password baru berhasil di buat!"})
         } catch (error) {
             return res.status(500).json({message:"error server"})
