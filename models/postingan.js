@@ -29,9 +29,6 @@ const postingan = db.define(
         foto:{
             type:DataTypes.STRING
         },
-        lokasi:{
-            type:DataTypes.STRING
-        },
         status:{
             type:DataTypes.ENUM("tersedia","terjual","menunggu")
         }

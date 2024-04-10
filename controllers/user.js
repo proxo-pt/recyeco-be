@@ -103,18 +103,18 @@ module.exports = {
         const {email,username,gender,birthdate} = req.body
         const foto = req.file 
 
-
-
         try {
             const users = await user.findByPk(iduser)
-            const akun = await user.findOne({
+            const akun = await user.findAll({
                 where:{
                     email:email
                 }
             })
 
-            if(akun){
-                return res.status(400).json({message:"email sudah terdaftar!"})
+            for( const item of akun){
+                if(akun){
+                    return res.status(400).json({message:"email sudah terdaftar!"})
+                }
             }
 
             if(!users){
@@ -190,10 +190,10 @@ module.exports = {
 
     addpostingan:async(req,res)=>{
         const {id:iduser} = req.akun;
-        const{judul,jenis,deskripsi,berat,harga,lokasi}= req.body
+        const{judul,jenis,deskripsi,berat,harga}= req.body
         const foto = req.file
 
-        if(!judul||!jenis||!deskripsi||!berat||!harga||!lokasi){
+        if(!judul||!jenis||!deskripsi||!berat||!harga){
             return res.status(400).json({message:"*kolom harus di isi semua"})
         }
         try {
@@ -204,7 +204,7 @@ module.exports = {
                 include:[{
                     model:user,
                     foreignKey:"pemilik",
-                    attributes:["id","username"]
+                    attributes:["id","username"],
                 }],
                 attributes:[
                     "id",
@@ -229,7 +229,7 @@ module.exports = {
                 deskripsi:deskripsi,
                 berat:berat,
                 harga:harga,
-                lokasi:lokasi,
+                lokasi:penjuals.lokasi,
                 status:"tersedia"
             })
             return res.status(201).json({message:"succes",postingan:response})
@@ -240,28 +240,53 @@ module.exports = {
 
     postingan:async(req,res)=>{
         try {
-            const response = await postingan.findAll({
-                where: {
-                    status: {
-                    [Op.not]: "terjual"
-                }
+            const page = parseInt(req.query.page) || 1; 
+            const limit = parseInt(req.query.limit) || 2; 
+            const offset = (page - 1) * limit;
+            
+
+        
+            const response = await postingan.findAndCountAll({
+              where: {
+                status: {
+                  [Op.not]: "terjual",
                 },
-                attributes: [
-                "foto",
+              },
+              attributes: [
+                "foto", 
                 "penjual",
-                "jenis",
-                "judul",
-                "harga"
-                ],
-                });
+                 "jenis", 
+                 "judul", 
+                 "harga"],
+
+              limit,
+              offset,
+            });
+
+            if(!response){
+                return res.status(404).json({message:"tidak ada postingan!"})
+            }
+
+        
+            const { count, rows } = response;
+        
+            const totalPages = Math.ceil(count / limit); // Total halaman
+            const hasNextPage = page < totalPages; // Apakah ada halaman berikutnya
+            
         
             return res.status(200).json({
-                message: "success",
-                postingan:response
+              message: "success",
+              infoHalaman: {
+                Halaman: page,
+                total_Halaman:totalPages,
+                halaman_berikut:hasNextPage,
+              },
+              postingan: rows,
+
             });
-            } catch (error) {
-                return res.status(500).json({ message: error });
-            }
+          } catch (error) {
+            return res.status(500).json({ message: error });
+          }
     },
 
     postinganByJenis:async(req,res)=>{
@@ -305,11 +330,15 @@ module.exports = {
                     "berat",
                     "harga",
                     "deskripsi",
-                    "lokasi",
                     "status",
                     ["createdAt","tanggalPosting"],
                     ["updatedAt","tanggalTerjual"]
-                    ]
+                    ],
+                    include:[{
+                        model:toko,
+                        foreignKey:"pemilik",
+                        attributes:["lokasi","link_map"]
+                    }]
             })
 
             if(!response){
@@ -713,6 +742,92 @@ module.exports = {
             return res.status(500).json({message:"eror"})
         }
 
+    },
+    editproduk:async(req,res)=>{
+        const {id:iduser} = req.akun
+        const {idpostingan} = req.params
+        const{judul,jenis,deskripsi,berat,harga,}= req.body
+        const foto = req.file
+        
+        try {
+            const produk = await postingan.findByPk(idpostingan,{
+                include:[{
+                    model:toko,
+                    foreignKey:"pemilik",
+                    where:{
+                        pemilik:iduser
+                    }
+                }]
+            })
+
+            if(!produk){
+                return res.status(400).json({message:"postingan tidak ada!"})
+            }
+
+            if(judul){
+                await produk.update({judul:judul})
+            }
+            if(jenis){
+                await produk.update({jenis:jenis})
+            }
+            if(berat){
+                await produk.update({berat:berat})
+            }
+            if(harga){
+                await produk.update({harga:harga})
+            }
+            if(deskripsi){
+                await produk.update({deskripsi:deskripsi})
+            }
+            if(foto){
+                const fotoPath = `${req.protocol}://${req.get('host')}/${foto.path}`;
+                const fotos = fotoPath.replace(/\\/g, '/')
+                await produk.update({ foto: fotos });
+            }
+
+
+            return res.status(200).json({message:"postingan berhasil di update!",data:produk})
+
+
+        } catch (error) {
+            return res.status(500).json({message:"error internal server"})    
+        }
+    },
+    deleteproduk:async(req,res)=>{
+        const {id:iduser}= req.akun
+        const {idpostingan} = req.params
+
+        try {
+            const verif = await verifikasi.findAll({
+                where:{
+                    idpostingan:idpostingan
+                }
+            })
+            if(verif.length === 0){
+                return req.json({message:"tidak ada verif"})
+            }
+            for (const item of verif) {
+                await item.destroy();
+              }
+
+            const produk = await postingan.findByPk(idpostingan,{
+                include:[{
+                    model:toko,
+                    foreignKey:"pemilik",
+                    where:{
+                        pemilik:iduser
+                    }
+                }]
+            })
+
+            if(!produk){
+                return res.status(400).json({message:"postingan tidak ada!"})
+            }
+            await produk.destroy()
+            return res.status(200).json({message:"berhasil terhapus!"})
+        } catch (error) {
+            return res.status(500).json({message:"internal server error",error})
+        }
     },
 
 }
