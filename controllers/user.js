@@ -890,39 +890,36 @@ module.exports = {
             })
 
             console.log('erere',verif)
-        // try {
-        //     const verif = await verifikasi.findAll({
-        //         where:{
-        //             idpostingan:idpostingan
-        //         }
-        //     })
-
-        //     if(verif.length === 0){
-        //         return req.json({message:"tidak ada verif"})
-        //     }
-        //     for (const item of verif) {
-        //         await item.destroy();
-        //       }
-
-        //     const produk = await postingan.findByPk(idpostingan,{
-        //         include:[{
-        //             model:toko,
-        //             foreignKey:"pemilik",
-        //             where:{
-        //                 pemilik:iduser
-        //             }
-        //         }]
-        //     })
-
-        //     if(!produk){
-        //         return res.status(400).json({message:"postingan tidak ada!"})
-        //     }
+        try {
+            const verif = await verifikasi.findAll({
+                where:{
+                    idpostingan:idpostingan
+                }
+            })
             
-        //     await produk.destroy()
-        //     return res.status(200).json({message:"berhasil terhapus!"})
-        // } catch (error) {
-        //     return res.status(500).json({message:"internal server error",error})
-        // }
+            for (const item of verif) {
+                await item.destroy();
+              }
+
+            const produk = await postingan.findByPk(idpostingan,{
+                include:[{
+                    model:toko,
+                    foreignKey:"pemilik",
+                    where:{
+                        pemilik:iduser
+                    }
+                }]
+            })
+
+            if(!produk){
+                return res.status(400).json({message:"postingan tidak ada!"})
+            }
+            
+            await produk.destroy()
+            return res.status(200).json({message:"berhasil terhapus!"})
+        } catch (error) {
+            return res.status(500).json({message:"internal server error",error})
+        }
     },
 
 }
