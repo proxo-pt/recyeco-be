@@ -390,6 +390,7 @@ module.exports = {
                     id:id
                 },
                 attributes:[
+                    "id",
                     "foto",
                     "judul",
                     "jenis",
@@ -539,7 +540,7 @@ module.exports = {
 
     beli:async(req,res)=>{
         const {id:iduser} = req.akun
-        const {idpostingan} = req.params
+        const idpostingan = req.query.idpostingan
 
         try {
 
@@ -567,6 +568,10 @@ module.exports = {
             
             if(response.status==="terjual"){
                 return res.status(400).json({message:"sudah terjual"})
+            }
+
+            if(response.status==="menunggu"){
+                return res.status(400).json({message:"sedang transaksi oleh pembeli lain"})
             }
 
             await response.update({status:"menunggu"})
@@ -692,7 +697,6 @@ module.exports = {
         try {
 
         const verif = await verifikasi.findByPk(idverif,{
-
             include:[{
                 model:postingan,
                 foreignKey:"idpenjual",
@@ -711,7 +715,7 @@ module.exports = {
             return res.status(400).json({message:"postingan sudah terjual"})
         }
 
-        if(aksi === "setuju"){
+        if(aksi === "Setujui"){
             await verif.postingan.update({status:"terjual"})
             await verifikasi.destroy({
                 where:{
@@ -721,7 +725,7 @@ module.exports = {
             return res.status(200).json({message:"berhasil terjual"})
         }
 
-        if(aksi === "batalkan"){
+        if(aksi === "Batalkan"){
             for(const item of verif){
                 await item.destroy()
             }
@@ -740,9 +744,12 @@ module.exports = {
 //manajemen produk    
     manajemen:async(req,res)=>{
         const {id:iduser} = req.akun
+        const verif = await verifikasi.findAll()
+        console.log('tesss',verif)
         try {
             const produk = await postingan.findAll({
                 attributes:[
+                    "id",
                     "judul",
                     "jenis",
                     "berat",
@@ -758,21 +765,33 @@ module.exports = {
                     attributes:[]
                 }]
             })
-            console.log(produk)
+
+            const verifProduk = produk.map(item => {
+                const matchedVerif = verif.find(v => v.dataValues.idpostingan === item.dataValues.id);
+                if (matchedVerif) {
+                  return {
+                    ...item.dataValues,
+                    id_verify: matchedVerif.id
+                  };
+                }
+                return {...item.dataValues, id_verify: null};
+            });
+
             const tersedia = produk.filter((p) => p.status === "tersedia")
             const menunggu = produk.filter((p) => p.status === "menunggu")
             const terjual = produk.filter((p) => p.status === "terjual")
             
-            
+
             return res.status(200).json({
             message:"succes",
             semua:produk.length,
             tersedia:tersedia.length,
             menunggu:menunggu.length,
             terjual:terjual.length,
-            produk:produk})
+            produk:verifProduk})
 
         } catch (error) {
+            console.log("errorrrrr", error)
             return res.status(500).json({message:"eror server"})
         }
     },
@@ -864,39 +883,46 @@ module.exports = {
     deleteproduk:async(req,res)=>{
         const {id:iduser}= req.akun
         const {idpostingan} = req.params
-
-        try {
-            const verif = await verifikasi.findAll({
+        const verif = await verifikasi.findAll({
                 where:{
                     idpostingan:idpostingan
                 }
             })
-            if(verif.length === 0){
-                return req.json({message:"tidak ada verif"})
-            }
-            for (const item of verif) {
-                await item.destroy();
-              }
 
-            const produk = await postingan.findByPk(idpostingan,{
-                include:[{
-                    model:toko,
-                    foreignKey:"pemilik",
-                    where:{
-                        pemilik:iduser
-                    }
-                }]
-            })
+            console.log('erere',verif)
+        // try {
+        //     const verif = await verifikasi.findAll({
+        //         where:{
+        //             idpostingan:idpostingan
+        //         }
+        //     })
 
-            if(!produk){
-                return res.status(400).json({message:"postingan tidak ada!"})
-            }
+        //     if(verif.length === 0){
+        //         return req.json({message:"tidak ada verif"})
+        //     }
+        //     for (const item of verif) {
+        //         await item.destroy();
+        //       }
+
+        //     const produk = await postingan.findByPk(idpostingan,{
+        //         include:[{
+        //             model:toko,
+        //             foreignKey:"pemilik",
+        //             where:{
+        //                 pemilik:iduser
+        //             }
+        //         }]
+        //     })
+
+        //     if(!produk){
+        //         return res.status(400).json({message:"postingan tidak ada!"})
+        //     }
             
-            await produk.destroy()
-            return res.status(200).json({message:"berhasil terhapus!"})
-        } catch (error) {
-            return res.status(500).json({message:"internal server error",error})
-        }
+        //     await produk.destroy()
+        //     return res.status(200).json({message:"berhasil terhapus!"})
+        // } catch (error) {
+        //     return res.status(500).json({message:"internal server error",error})
+        // }
     },
 
 }

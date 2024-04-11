@@ -39,7 +39,7 @@ router.get("/daftartoko",verify,user.getTokoById)
         router.delete("/manajemen/delete/:idpostingan",verify,user.deleteproduk)
         
     //beli
-    router.post("/postingan/detailPostingan/beli/:idpostingan",verify,user.beli)
+    router.post("/postingan/detailPostingan/beli",verify,user.beli)
 
     //dashboard
     router.get("/dashboard/totalproduk",verify,user.totalproduk)
