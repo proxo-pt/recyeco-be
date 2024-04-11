@@ -240,9 +240,11 @@ module.exports = {
             if(!penjuals){
                 return res.status(400).json({message:"daftar toko terlebih dahulu!"})
             }
-
+            
+            const fotoPath = `${req.protocol}://${req.get('host')}/${foto.path}`;
+            const fotos = fotoPath.replace(/\\/g, '/')
             const response = await postingan.create({
-                foto:foto.path,
+                foto:fotos,
                 idpenjual:penjuals.id,
                 penjual:penjuals.toko,
                 judul:judul,
@@ -262,9 +264,9 @@ module.exports = {
     postingan:async(req,res)=>{
         try {
             const page = parseInt(req.query.page) || 1; 
-            const limit = parseInt(req.query.limit) || 2; 
+            const limit = parseInt(req.query.limit) || 15; 
             const offset = (page - 1) * limit;
-            
+     
 
         
             const response = await postingan.findAndCountAll({
@@ -274,6 +276,7 @@ module.exports = {
                 },
               },
               attributes: [
+                "id",
                 "foto", 
                 "penjual",
                  "jenis", 
