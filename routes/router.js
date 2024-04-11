@@ -31,6 +31,12 @@ router.post("/daftartoko",verify,upload.single("foto"),user.daftartoko)
     //toko
     router.post("/addpostingan",verify,upload.single("foto"),user.addpostingan)
     router.get("/manajemenProduk",verify,user.myPostingan)
+        //manejemen produk
+        router.get("/manajemen",verify,user.manajemen)
+        router.get("/manajemen/search",verify,user.searchproduk)
+        router.put("/manajemen/edit/:idpostingan",verify,upload.single("foto"),user.editproduk)
+        router.delete("/manajemen/delete/:idpostingan",verify,user.deleteproduk)
+        
     //beli
     router.post("/postingan/detailPostingan/beli/:idpostingan",verify,user.beli)
 
@@ -41,9 +47,7 @@ router.post("/daftartoko",verify,upload.single("foto"),user.daftartoko)
     router.get("/dashboard/verifikasi",verify,user.getverifikasi)
     router.put('/dashboard/verifikasi/:idverif', verify,user.verifikasi);
 
-    //manejemen produk
-     router.get("/manajemen",verify,user.manajemen)
-     router.get("/manajemen/search",verify,user.searchproduk)
+
 
 //admin
 router.get("/status",admin.status)
