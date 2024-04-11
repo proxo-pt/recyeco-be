@@ -314,28 +314,55 @@ module.exports = {
     postinganByJenis:async(req,res)=>{
         const {jenis} = req.body;
         try {
-            const response = await postingan.findAll({
-                where:{
-                    jenis:jenis
-                },
-                attributes:[
-                    "foto",
-                    "jenis",
-                    "judul",
-                    "harga",]
-            })
-
-            if(!response[0])
-                return res.status(403).json({message:"tidak ada postingan"})
+            const page = parseInt(req.query.page) || 1; 
+            const limit = parseInt(req.query.limit) || 2; 
+            const offset = (page - 1) * limit;
             
 
+        
+            const response = await postingan.findAndCountAll({
+                where: {
+                    status: {
+                        [Op.not]: "terjual",
+                        },
+                    jenis:jenis
+                },
+                attributes: [
+                    "foto", 
+                    "penjual",
+                    "jenis", 
+                    "judul", 
+                    "harga"],
+
+                    limit,
+                    offset,
+                });
+
+            if(!response){
+                return res.status(404).json({message:"tidak ada postingan!"})
+            }
+
+        
+            const { count, rows } = response;
+        
+            const totalPages = Math.ceil(count / limit); // Total halaman
+            const hasNextPage = page < totalPages; // Apakah ada halaman berikutnya
+            
+        
             return res.status(200).json({
-                message:"succes",
-                postingan:response
-            })
-        } catch (error) {
-            return res.status(500).json({message:"eror server"})
-        }
+              message: "success",
+              infoHalaman: {
+                Halaman: page,
+                total_Halaman:totalPages,
+                halaman_berikut:hasNextPage,
+              },
+              postingan: rows,
+
+            });
+          } catch (error) {
+            return res.status(500).json({ message: error });
+          }
+ 
     },
 
     detailPostingan:async(req,res)=>{
