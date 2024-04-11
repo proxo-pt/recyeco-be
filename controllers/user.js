@@ -14,7 +14,7 @@ const toko = require("../models/toko")
 module.exports = {
 
     search:async(req,res)=>{
-        const {search} = req.body
+        const search = req.query.search
         try {
             const produk = await postingan.findAll({
                 where:{
@@ -242,8 +242,10 @@ module.exports = {
                 return res.status(400).json({message:"daftar toko terlebih dahulu!"})
             }
 
+            const fotoPath = `${req.protocol}://${req.get('host')}/${foto.path}`;
+            const fotos = fotoPath.replace(/\\/g, '/')
             const response = await postingan.create({
-                foto:foto.path,
+                foto:fotos,
                 idpenjual:penjuals.id,
                 penjual:penjuals.toko,
                 judul:judul,
@@ -261,50 +263,65 @@ module.exports = {
     },
 
     postingan:async(req,res)=>{
-        try {
-            const page = parseInt(req.query.page) || 1; 
-            const limit = parseInt(req.query.limit) || 2; 
-            const offset = (page - 1) * limit;
-            
+        const page = parseInt(req.query.page) || 1; 
+        const limit = parseInt(req.query.limit) || 4; 
+        const search = req.query.search;
+        const jenis = req.query.jenis;
+        const offset = (page - 1) * limit;
 
+        try {
+            let whereCondition = {
+                status: {
+                    [Op.not]: "terjual",
+                },
+            };
+        
+            if(jenis){
+                whereCondition = {
+                    ...whereCondition,
+                    jenis:jenis
+                }
+            }
+            if (search) {
+                whereCondition = {
+                ...whereCondition,
+                    judul: {
+                        [Op.substring]: search,
+                    },
+                };
+            }
         
             const response = await postingan.findAndCountAll({
-              where: {
-                status: {
-                  [Op.not]: "terjual",
-                },
-              },
-              attributes: [
-                "foto", 
-                "penjual",
-                 "jenis", 
-                 "judul", 
-                 "harga"],
-
-              limit,
-              offset,
+                where: whereCondition,
+                attributes: [
+                    "id",
+                    "foto", 
+                    "penjual", 
+                    "jenis", 
+                    "judul", 
+                    "harga",
+                    "status"],
+                limit,
+                offset,
             });
-
-            if(!response){
-                return res.status(404).json({message:"tidak ada postingan!"})
+        
+            if (!response) {
+              return res.status(404).json({ message: "tidak ada postingan!" });
             }
-
         
             const { count, rows } = response;
         
             const totalPages = Math.ceil(count / limit); // Total halaman
             const hasNextPage = page < totalPages; // Apakah ada halaman berikutnya
-            
         
             return res.status(200).json({
               message: "success",
               infoHalaman: {
                 Halaman: page,
-                total_Halaman:totalPages,
-                halaman_berikut:hasNextPage,
+                total_Halaman: totalPages,
+                halaman_berikut: hasNextPage,
               },
               postingan: rows,
-
             });
           } catch (error) {
             return res.status(500).json({ message: error });
