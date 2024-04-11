@@ -91,7 +91,6 @@ module.exports = {
             if(!response){
                 return res.status(404).json({message:"user not found"})
             }
-
             return res.status(200).json({message:"succes",profil:response})
         } catch (error) {
             return res.status(500).json({Message:"error server"})
@@ -264,7 +263,7 @@ module.exports = {
 
     postingan:async(req,res)=>{
         const page = parseInt(req.query.page) || 1; 
-        const limit = parseInt(req.query.limit) || 4; 
+        const limit = parseInt(req.query.limit) || 15; 
         const search = req.query.search;
         const jenis = req.query.jenis;
         const offset = (page - 1) * limit;
@@ -333,9 +332,9 @@ module.exports = {
         const {jenis} = req.body;
         try {
             const page = parseInt(req.query.page) || 1; 
-            const limit = parseInt(req.query.limit) || 2; 
+            const limit = parseInt(req.query.limit) || 15; 
             const offset = (page - 1) * limit;
-            
+     
 
         
             const response = await postingan.findAndCountAll({
@@ -384,7 +383,7 @@ module.exports = {
     },
 
     detailPostingan:async(req,res)=>{
-        const {id} = req.body
+        const id = req.query.id
         try {
             const response = await postingan.findOne({
                 where:{
@@ -404,7 +403,7 @@ module.exports = {
                     include:[{
                         model:toko,
                         foreignKey:"pemilik",
-                        attributes:["lokasi","link_map"]
+                        attributes:["toko","lokasi","link_map","kontak"]
                     }]
             })
 
@@ -434,7 +433,7 @@ module.exports = {
 
             return res.status(200).json({
                 message:"succes",
-                Postingan:response,
+                postingan:response,
             })
         } catch (error) {
             return res.status(500).json({message:error})

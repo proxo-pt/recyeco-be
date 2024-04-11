@@ -15,8 +15,8 @@ router.put("/resetpassword",verify,auth.resetpassword)
 //user no login
 router.get("/postingan",user.postingan) 
 router.get("/postingan/postinganByJenis",user.postinganByJenis)
-router.get("/postingan/detailPostingan",user.detailPostingan)
-router.get("/postingan",user.search)
+router.get("/postingan/detail",user.detailPostingan)
+router.get("/postingan/search",user.search)
 
 
 //user login
