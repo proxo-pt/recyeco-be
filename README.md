@@ -17,7 +17,7 @@ Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express 
 1. **Clone repository**
 
    ```bash
-   git clone https://github.com/syarifsakur/recyeco-be.git
+   git clone https://github.com/proxo-pt/recyeco-be.git
 
 2. **Pindah ke direktori proyek**
 
@@ -31,9 +31,9 @@ Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express 
 
 4. **Konfigurasi Database**
 
-    1.install xampp
+    1.install xampp/docker
 
-    2.nyalakan(start) apache dan mysql
+    2.nyalakan(start) mysql
 
     3.ke website phpmyadmin atau tekan admin pada mysql
 
