@@ -298,7 +298,8 @@ module.exports = {
                     "foto", 
                     "penjual", 
                     "jenis", 
-                    "judul", 
+                    "judul",
+                    "berat", 
                     "harga",
                     "status"],
                 limit,
@@ -722,7 +723,9 @@ module.exports = {
         }
 
         if(aksi === "batalkan"){
-            await verif.destroy()
+            for(const item of verif){
+                await item.destroy()
+            }
             return res.status(200).json({message:"verifikasi di batalkan"})
         }
 
@@ -889,6 +892,7 @@ module.exports = {
             if(!produk){
                 return res.status(400).json({message:"postingan tidak ada!"})
             }
+            
             await produk.destroy()
             return res.status(200).json({message:"berhasil terhapus!"})
         } catch (error) {
