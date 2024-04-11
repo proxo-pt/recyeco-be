@@ -179,7 +179,19 @@ Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express 
       "deskripsi":"",
       "berat":"",
       "harga":"",
-      "lokasi":"",
       "foto":""
    }
+   ```
+
+## Tampilkan Postingan
+
+   **endpoint  :  /postingan**
+
+   **method :  GET**
+
+   **Request query   :**
+   ```json
+   page,
+   jenis,
+   search
    ```

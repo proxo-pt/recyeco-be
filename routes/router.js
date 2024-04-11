@@ -26,6 +26,7 @@ router.put("/profil/edit",verify,upload.single("foto"),user.edituser)
 router.post("/postingan/addkeranjang",verify,user.addKeranjang)
 router.get("/keranjang",verify,user.keranjang)
 router.post("/daftartoko",verify,upload.single("foto"),user.daftartoko)
+router.get("/daftartoko",verify,user.getTokoById)
 
 
     //toko
