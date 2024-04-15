@@ -1,197 +1,66 @@
-# Backend Express MySQL
+# Recyeco Mart - Backend
 
-Ini adalah repository backend yang menggunakan **Express** dan **MySQL** untuk membangun API. Repository ini disiapkan agar dapat digunakan oleh anak-anak Front-End (FE) untuk mengembangkan aplikasi mereka.
+This repository contains the backend codebase for constructing APIs using **Express** and **PostgreSQL**. It's tailored for **Recyeco's Front-End (FE)** developers to streamline their application development process.
 
-## Persyaratan
+## Requirements
 
-Sebelum Anda dapat menggunakan backend ini, pastikan Anda memenuhi persyaratan-persyaratan berikut:
+Before getting started, ensure you have the following prerequisites:
 
-- **Node.js** (versi 14 atau yang lebih baru)
-- **MySQL** (instalasi lokal atau server MySQL eksternal)
-- **npm** (Node Package Manager)
+- **Node.js** (version 18 or later)
+- **Docker** and **docker-compose**
+- **npm** or **yarn** (Package Manager)
 
-## Instalasi
+## Installation
 
-Berikut adalah langkah-langkah untuk menginstal dan menjalankan backend Express MySQL:
+Follow these steps to install and set up the backend using Docker Compose:
 
-1. **Clone repository**
+1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/syarifsakur/recyeco-be.git
-
-2. **Pindah ke direktori proyek**
-
-    ```bash
-    cd recyeco-be
-
-3. **Instal dependensi**
-
-    ```bash
-    npm install
-
-4. **Konfigurasi Database**
-
-    1.install xampp
-
-    2.nyalakan(start) apache dan mysql
-
-    3.ke website phpmyadmin atau tekan admin pada mysql
-
-    4.buat database pada mysql localnya kamu dengan nama **recyeco** biar sesuai nda perlu rubah2 lagi
-
-
-
-5. **Jalankan Server**
-
-    ```bash
-    npm start
-    ```
-
-    **or**
-
-    ```
-    nodemon index
-    ```
-
-# endpoint
-
-### server :
-   **localhost:1000/**
-
-   cara penggunaanya misal localhost:1000/endpoint
-
-# AUTH
-## login
-   **endpoint : /login**
-   
-   **method : POST**
-
-   **Request body :**
-   ```json
-   {
-      "email":"email",
-      "password":"password"
-   }
+   git clone https://github.com/proxo-pt/recyeco-be
    ```
 
-   <!-- **Response :**
-   ```json
-   {
-      "message:":"login berhasil",
-      "id":"usernames.id",
-      "token":"token"
-   }
-   ``` -->
+2. **Navigate to the project directory**
 
-## register
-   **endpoint : /register**
-
-   **method : POST**
-
-   **Request body :**
-   ```json
-   {
-      "username":"username",
-      "email":"email",
-      "password":"password"
-   }
+   ```bash
+   cd recyeco-backend
    ```
 
-## sendemail
-   **endpoint : /sendemail**
+3. **Copy environment variables**
 
-   **method : POST**
+   Copy the `.env.example` file to `.env` and fill in the necessary environment variables.
 
-   **Request body :**
-   ```json
-   {
-      "email":"email",
-   }
+4. **Build and start containers**
+
+   ```bash
+   docker-compose up -d
    ```
 
-## reset password
-    
-   **endpoint : /:iduser/resetpassword**
+## Running the Server
 
-   **method : POST**
+To start the server, use one of the following commands:
 
-   **Request params : {iduser}**
+- Using npm:
+  ```bash
+  npm start
+  ```
+- Using yarn:
+  ```bash
+  yarn start
+  ```
+- Using nodemon (for development):
+  ```bash
+  nodemon index
+  ```
 
-   **Request body :**
-   ```json
-   {
-      "newpassword":"newpassword",
-      "confirmpassword":"confirmpassword",
-   }
-   ```
+## Docker Compose Configuration
 
-# PROFIL
-## myprofil
+The `docker-compose.yml` file is configured to set up the PostgreSQL database and tables within Docker containers. Ensure that Docker and docker-compose are properly installed and running on your system.
 
-   **endpoint : /profil/:iduser**
+## Package Manager
 
-   **method : GET**
+You can use either npm or yarn as your package manager. Choose one and stick to it throughout the project.
 
-## Edit Profil
+## Contributing
 
-   **endpoint  : /profil/edit**
-
-   **method : PUT**
-
-   **Request body(form-data) :**
-   ```json
-   {
-      "email":"",
-      "username":"",
-      "ttl":"",
-      "foto":"",
-      "jk":""
-   }
-   ```
-
-# yuhu
-## daftar toko
-
-   **endpoint  :  /daftartoko**
-
-   **method :  POST**
-
-   **Request body :**
-   ```json
-   {
-      "foto":"",
-      "kontak":"",
-      "lokasi"
-   }
-   ```
-
-## ADD Postingan
-
-   **endpoint  :  /addpostingan**
-
-   **method :  POST**
-
-   **Request body(body-form) :**
-   ```json
-   {
-      "judul":"",
-      "jenis":"",
-      "deskripsi":"",
-      "berat":"",
-      "harga":"",
-      "foto":""
-   }
-   ```
-
-## Tampilkan Postingan
-
-   **endpoint  :  /postingan**
-
-   **method :  GET**
-
-   **Request query   :**
-   ```json
-   page,
-   jenis,
-   search
-   ```
+Feel free to contribute to this project by submitting pull requests or raising issues.
