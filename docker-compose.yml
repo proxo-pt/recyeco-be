@@ -1,0 +1,17 @@
+version: "3.8"
+services:
+    db:
+        image: mysql:8
+        environment:
+            MYSQL_DATABASE: recyeco-be
+            MYSQL_USER: recyeco
+            MYSQL_PASSWORD: recyeco
+            MYSQL_ROOT_PASSWORD: recyeco
+        ports:
+            - "3306:3306"
+        volumes:
+            - recyeco-be:/var/lib/mysql
+        restart: always
+
+volumes:
+    recyeco-be:

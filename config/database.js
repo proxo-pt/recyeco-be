@@ -1,18 +1,17 @@
-const sequelize = require("sequelize")
+import { Sequelize } from "sequelize";
 
-const db = new sequelize("recyeco","root","",{
-    host:"localhost",
-    dialect:"mysql"
-})
+const db = new Sequelize("recyeco-be", "recyeco", "recyeco", {
+  host: "localhost",
+  dialect: "mysql",
+});
 
-try{
-db.authenticate()
-console.log("database terhubung")
-db.sync()
-console.log("tabel terhubung")
+try {
+  db.authenticate();
+  console.log("database terhubung");
+  db.sync();
+  console.log("tabel terhubung");
+} catch (error) {
+  console.log("database tidak terhubung", error);
 }
-catch(error){
-    console.log("databse tidak terhubung",error)
-}
 
-module.exports=db
+export default db;

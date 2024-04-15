@@ -1,31 +1,31 @@
-const { Sequelize , DataTypes} = require("sequelize")
-const db = require("../config//database")
-const user = require("../models/user")
+import { DataTypes } from "sequelize";
+import db from "../config/database.js";
+import User from "./user.js";
 
-const toko = db.define(
-    "toko",
-    {
-        pemilik:{
-            type:DataTypes.INTEGER
-        },
-        toko:{
-            type:DataTypes.STRING
-        },
-        kontak:{
-            type:DataTypes.STRING
-        },
-        lokasi:{
-            type:DataTypes.STRING
-        },
-        link_map:{
-            type:DataTypes.STRING
-        }
-    },{
-        freezeTableName:true
-    }
-)
+const Toko = db.define(
+  "toko",
+  {
+    pemilik: {
+      type: DataTypes.INTEGER,
+    },
+    toko: {
+      type: DataTypes.STRING,
+    },
+    kontak: {
+      type: DataTypes.STRING,
+    },
+    lokasi: {
+      type: DataTypes.STRING,
+    },
+    link_map: {
+      type: DataTypes.STRING,
+    },
+  },
+  {
+    freezeTableName: true,
+  }
+);
 
-toko.belongsTo(user,{foreignKey:"pemilik"})
+Toko.belongsTo(User, { foreignKey: "pemilik" });
 
-
-module.exports=toko
+export default Toko;
