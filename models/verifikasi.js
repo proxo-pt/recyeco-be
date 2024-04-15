@@ -1,21 +1,22 @@
-const {sequelize,DataTypes}= require("sequelize")
-const db = require("../config/database")
-const postingan = require("./postingan")
+import { DataTypes } from "sequelize";
+import db from "../config/database.js";
+import Postingan from "./postingan.js";
 
-const verifikasi = db.define(
-    "verifikasi",
-    {
-        pembeli:{
-            type:DataTypes.STRING
-        },
-        idpostingan:{
-            type:DataTypes.INTEGER
-        },
-    },{
-        freezeTableName:true
-    }
-)
+const Verifikasi = db.define(
+  "verifikasi",
+  {
+    pembeli: {
+      type: DataTypes.STRING,
+    },
+    idpostingan: {
+      type: DataTypes.INTEGER,
+    },
+  },
+  {
+    freezeTableName: true,
+  }
+);
 
-verifikasi.belongsTo(postingan,{foreignKey:"idpostingan"})
+Verifikasi.belongsTo(Postingan, { foreignKey: "idpostingan" });
 
-module.exports=verifikasi
+export default Verifikasi;

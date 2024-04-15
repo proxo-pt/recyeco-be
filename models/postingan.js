@@ -1,42 +1,43 @@
-const { Sequelize , DataTypes} = require("sequelize")
-const db = require("../config//database")
-const toko = require("../models/toko")
+import { DataTypes } from "sequelize";
+import db from "../config/database.js";
+import Toko from "./toko.js";
 
-const postingan = db.define(
-    "postingan",
-    {
-        idpenjual:{
-            type:DataTypes.INTEGER
-        },
-        penjual:{
-            type:DataTypes.STRING
-        },
-        judul:{
-            type:DataTypes.STRING
-        },
-        jenis:{
-            type:DataTypes.STRING
-        },
-        deskripsi:{
-            type:DataTypes.STRING
-        },
-        berat:{
-            type:DataTypes.DECIMAL
-        },
-        harga:{
-            type:DataTypes.INTEGER
-        },
-        foto:{
-            type:DataTypes.STRING
-        },
-        status:{
-            type:DataTypes.ENUM("tersedia","terjual","menunggu")
-        }
-    },{
-        freezeTableName:true
-    }
-)
-postingan.belongsTo(toko,{foreignKey:"idpenjual"})
+const Postingan = db.define(
+  "postingan",
+  {
+    idpenjual: {
+      type: DataTypes.INTEGER,
+    },
+    penjual: {
+      type: DataTypes.STRING,
+    },
+    judul: {
+      type: DataTypes.STRING,
+    },
+    jenis: {
+      type: DataTypes.STRING,
+    },
+    deskripsi: {
+      type: DataTypes.STRING,
+    },
+    berat: {
+      type: DataTypes.DECIMAL,
+    },
+    harga: {
+      type: DataTypes.INTEGER,
+    },
+    foto: {
+      type: DataTypes.STRING,
+    },
+    status: {
+      type: DataTypes.ENUM("tersedia", "terjual", "menunggu"),
+    },
+  },
+  {
+    freezeTableName: true,
+  }
+);
 
+Postingan.belongsTo(Toko, { foreignKey: "idpenjual" });
 
-module.exports=postingan
+export default Postingan;

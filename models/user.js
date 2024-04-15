@@ -1,42 +1,38 @@
-const { Sequelize , DataTypes} = require("sequelize")
-const db = require("../config//database")
-// const postingan = require("./postingan")
-// const riwayat = require("./riwayat")
-// const tukarpoint = require("./tukarpoint")
-// const event = require("./event")
-// const keranjang = require("./keranjang")
+import { DataTypes } from "sequelize";
+import db from "../config/database.js";
 
 const User = db.define(
-    "user",
-    {
-    username:{
-        type: DataTypes.STRING
+  "user",
+  {
+    username: {
+      type: DataTypes.STRING,
     },
-    email:{
-        type:DataTypes.STRING
+    email: {
+      type: DataTypes.STRING,
     },
-    password:{
-        type: DataTypes.STRING
+    password: {
+      type: DataTypes.STRING,
     },
-    foto:{
-        type:DataTypes.STRING
+    foto: {
+      type: DataTypes.STRING,
     },
-    role:{
-        type:DataTypes.ENUM("toko","User"),
-        defaultValue: "user"
+    role: {
+      type: DataTypes.ENUM("toko", "user"),
+      defaultValue: "user",
     },
-    token:{
-        type:DataTypes.STRING
+    token: {
+      type: DataTypes.STRING,
     },
-    birthdate:{
-        type:DataTypes.STRING
+    birthdate: {
+      type: DataTypes.STRING,
     },
-    gender:{
-        type:DataTypes.STRING
-    }
-},{
-    freezeTableName:true
-});
+    gender: {
+      type: DataTypes.STRING,
+    },
+  },
+  {
+    freezeTableName: true,
+  }
+);
 
-
-module.exports=User
+export default User;
