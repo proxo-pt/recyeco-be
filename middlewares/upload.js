@@ -2,10 +2,10 @@ import multer from "multer";
 import path from "path";
 
 const storage = multer.diskStorage({
-  destination: (cb) => {
+  destination: (req, file, cb) => {
     cb(null, "publics/uploads/");
   },
-  filename: (file, cb) => {
+  filename: (req, file, cb) => {
     cb(
       null,
       file.fieldname + "-" + Date.now() + path.extname(file.originalname)
@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
   },
 });
 
-const fileFilter = (file, cb) => {
+const fileFilter = (req, file, cb) => {
   if (
     file.mimetype === "image/png" ||
     file.mimetype === "image/jpg" ||
