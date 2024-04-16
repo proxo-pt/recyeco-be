@@ -710,7 +710,7 @@ export default {
 
   async editProduk(req, res) {
     const { id: iduser } = req.akun;
-    const { idpostingan } = req.params;
+    const idpostingan = req.query.idpostingan;
     const { judul, jenis, deskripsi, berat, harga } = req.body;
     const foto = req.file;
 
@@ -762,7 +762,7 @@ export default {
 
   async deleteProduk(req, res) {
     const { id: iduser } = req.akun;
-    const { idpostingan } = req.params;
+    const  idpostingan  = req.query.idpostingan;
     const verif = await verifikasi.findAll({
       where: {
         idpostingan: idpostingan,

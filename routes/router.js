@@ -38,12 +38,12 @@ router.get("/manajemenProduk", verifyToken, user.myPostingan);
 router.get("/manajemen", verifyToken, user.manajemen);
 router.get("/manajemen/search", verifyToken, user.searchProduk);
 router.put(
-  "/manajemen/edit/:idpostingan",
+  "/manajemen/edit",
   verifyToken,
   upload.single("foto"),
   user.editProduk
 );
-router.delete("/manajemen/delete/:idpostingan", verifyToken, user.deleteProduk);
+router.delete("/manajemen/delete", verifyToken, user.deleteProduk);
 
 //beli
 router.post("/postingan/detailPostingan/beli", verifyToken, user.beli);
