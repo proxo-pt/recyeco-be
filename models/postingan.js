@@ -27,7 +27,7 @@ const Postingan = db.define(
       type: DataTypes.INTEGER,
     },
     foto: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT('long'),
     },
     status: {
       type: DataTypes.ENUM("tersedia", "terjual", "menunggu"),

@@ -4,6 +4,7 @@ import { Op } from "sequelize";
 import verifikasi from "../models/verifikasi.js";
 import toko from "../models/toko.js";
 import tokos from "../models/toko.js";
+import sharp from "sharp";
 
 export default {
   async search(req, res) {
@@ -91,8 +92,12 @@ export default {
         await users.update({ username: username });
       }
       if (foto) {
-        const fotoPath = `${req.protocol}://${req.get("host")}/${foto.path}`;
-        const fotos = fotoPath.replace(/\\/g, "/");
+        const compressedImageBuffer = await sharp(foto.buffer)
+          .resize({ width: 400 })
+          .toBuffer();
+
+        const base64CompressedImage = compressedImageBuffer.toString("base64");
+        const fotos = `data:${foto.mimetype};base64,` + base64CompressedImage;
         await users.update({ foto: fotos });
       }
       if (birthdate) {
@@ -104,6 +109,7 @@ export default {
 
       return res.status(200).json({ message: "berhasil update!" });
     } catch (error) {
+      console.error(error);
       return res.status(500).json({ message: "server eror" });
     }
   },
@@ -198,8 +204,12 @@ export default {
           .json({ message: "daftar toko terlebih dahulu!" });
       }
 
-      const fotoPath = `${req.protocol}://${req.get("host")}/${foto.path}`;
-      const fotos = fotoPath.replace(/\\/g, "/");
+      const compressedImageBuffer = await sharp(foto.buffer)
+        .resize(1280, 720)
+        .toBuffer();
+
+      const base64CompressedImage = compressedImageBuffer.toString("base64");
+      const fotos = `data:${foto.mimetype};base64,` + base64CompressedImage;
       const response = await postingan.create({
         foto: fotos,
         idpenjual: penjuals.id,
@@ -747,8 +757,12 @@ export default {
         await produk.update({ deskripsi: deskripsi });
       }
       if (foto) {
-        const fotoPath = `${req.protocol}://${req.get("host")}/${foto.path}`;
-        const fotos = fotoPath.replace(/\\/g, "/");
+        const compressedImageBuffer = await sharp(foto.buffer)
+          .resize(1280, 720)
+          .toBuffer();
+
+        const base64CompressedImage = compressedImageBuffer.toString("base64");
+        const fotos = `data:${foto.mimetype};base64,` + base64CompressedImage;
         await produk.update({ foto: fotos });
       }
 
@@ -762,7 +776,7 @@ export default {
 
   async deleteProduk(req, res) {
     const { id: iduser } = req.akun;
-    const  idpostingan  = req.query.idpostingan;
+    const idpostingan = req.query.idpostingan;
     const verif = await verifikasi.findAll({
       where: {
         idpostingan: idpostingan,

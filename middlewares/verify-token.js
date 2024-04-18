@@ -13,7 +13,6 @@ const verifyToken = async (req, res, next) => {
     if (data === null) {
       return res.status(404).json({ message: "incorrect credential" });
     }
-    console.log("nih data cuy", data);
 
     req.akun = data;
     next();

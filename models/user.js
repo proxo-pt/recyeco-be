@@ -14,7 +14,7 @@ const User = db.define(
       type: DataTypes.STRING,
     },
     foto: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT('long'),
     },
     role: {
       type: DataTypes.ENUM("toko", "user"),
