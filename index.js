@@ -13,7 +13,6 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(router);
-app.use('/publics/uploads', express.static('publics/uploads'));
 
 const PORT = process.env.SUPABASE_PORT || 8080;
 app.listen(PORT, () => {
