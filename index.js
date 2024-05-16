@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(router);
 app.use("/publics/uploads", express.static("publics/uploads"));
 
-const PORT = process.env.APP_PORT || 8080;
+const PORT = process.env.SUPABASE_PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
