@@ -1,7 +1,7 @@
-import user from "../models/user.js";
-import bcrypt from "bcrypt";
-import nodemailer from "nodemailer";
-import jwt from "jsonwebtoken";
+import user from '../models/user.js';
+import bcrypt from 'bcrypt';
+import nodemailer from 'nodemailer';
+import jwt from 'jsonwebtoken';
 
 export default {
   async register(req, res) {
@@ -10,36 +10,36 @@ export default {
     if (!username || !password || !email) {
       return res.status(400).json({
         message:
-          "username,email,password,foto,tempat tanggal lahir,jenis kelamin tidak boleh kosong!",
+          'username,email,password,foto,tempat tanggal lahir,jenis kelamin tidak boleh kosong!'
       });
     }
     if (password.length < 8) {
-      return res.status(400).json({ message: "password minimal 8 karakter" });
+      return res.status(400).json({ message: 'password minimal 8 karakter' });
     }
-    if (!email.includes("@")) {
-      return res.status(400).json({ message: "harus dengan format @" });
+    if (!email.includes('@')) {
+      return res.status(400).json({ message: 'harus dengan format @' });
     }
     try {
       const cekuser = await user.findAll();
       if (cekuser.email === email) {
-        return res.json({ message: "email sudah terdaftar" });
+        return res.json({ message: 'email sudah terdaftar' });
       }
 
       const users = await user.findOne({ where: { email: email } });
       if (users) {
-        console.log("email sudah terdaftar");
-        return res.status(400).json({ message: "email sudah terdaftar" });
+        console.log('email sudah terdaftar');
+        return res.status(400).json({ message: 'email sudah terdaftar' });
       }
 
       const hashPassword = await bcrypt.hash(password, 10);
       const akun = await user.create({
         username: username,
         email: email,
-        password: hashPassword,
+        password: hashPassword
       });
       return res
         .status(201)
-        .json({ message: "registrasi berhasil", data: akun });
+        .json({ message: 'registrasi berhasil', data: akun });
     } catch (error) {
       console.log(error);
       return res.status(500).send(error);
@@ -51,52 +51,52 @@ export default {
     if (!email && !password) {
       return res
         .status(400)
-        .json({ message: "email atau password tidak boleh kosong!" });
+        .json({ message: 'email atau password tidak boleh kosong!' });
     }
     if (!password) {
-      return res.status(400).json({ message: "password tidak boleh kosong!" });
+      return res.status(400).json({ message: 'password tidak boleh kosong!' });
     }
     if (!email) {
-      return res.status(400).json({ message: "email tidak boleh kosong!" });
+      return res.status(400).json({ message: 'email tidak boleh kosong!' });
     }
-    if (!email.includes("@")) {
-      return res.status(400).json({ message: "harus dengan format @" });
+    if (!email.includes('@')) {
+      return res.status(400).json({ message: 'harus dengan format @' });
     }
 
     try {
       const usernames = await user.findOne({
         where: {
-          email: email,
-        },
+          email: email
+        }
       });
       if (!usernames) {
-        return res.status(404).json({ message: "email tidak terdaftar" });
+        return res.status(404).json({ message: 'email tidak terdaftar' });
       }
       const passwords = await bcrypt.compare(password, usernames.password);
       if (!passwords) {
-        return res.status(404).json({ message: "password salah!" });
+        return res.status(404).json({ message: 'password salah!' });
       }
       //create jwt
       const token = jwt.sign(
         {
-          id: usernames.id,
+          id: usernames.id
         },
-        "qwertyuiop",
-        { expiresIn: "1d" }
+        'qwertyuiop',
+        { expiresIn: '1d' }
       );
 
       await usernames.update({ token: token });
 
-      res.cookie("token", token, {
+      res.cookie('token', token, {
         httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000,
+        maxAge: 24 * 60 * 60 * 1000
       });
 
       return res
         .status(200)
-        .json({ message: "login berhasil!", id: usernames.id, token: token });
+        .json({ message: 'login berhasil!', id: usernames.id, token: token });
     } catch (error) {
-      return res.status(500).json({ message: "error", error });
+      return res.status(500).json({ message: 'error', error });
     }
   },
 
@@ -105,18 +105,18 @@ export default {
     try {
       const users = await user.findOne({
         where: {
-          email: email,
-        },
+          email: email
+        }
       });
       const token = jwt.sign(
         {
-          id: users.id,
+          id: users.id
         },
-        "qwertyuiop",
-        { expiresIn: "1d" }
+        'qwertyuiop',
+        { expiresIn: '1d' }
       );
       if (!users) {
-        return res.status(403).json({ message: "email not found" });
+        return res.status(403).json({ message: 'email not found' });
       }
       const emailBody = `
                 <h1>Reset Password</h1>
@@ -135,40 +135,40 @@ export default {
                 `;
 
       const transporter = nodemailer.createTransport({
-        service: "gmail",
+        service: 'gmail',
         auth: {
-          user: "recyecoteam@gmail.com",
-          pass: "mhwjspzzyrmffwpi",
-        },
+          user: 'recyecoteam@gmail.com',
+          pass: 'mhwjspzzyrmffwpi'
+        }
       });
       const sendmail = transporter.sendMail({
-        from: "recyecoteam@gmail.com",
+        from: 'recyecoteam@gmail.com',
         to: email,
-        subject: "forget-password",
+        subject: 'forget-password',
         html: emailBody,
-        text: "verifikasi akun",
+        text: 'verifikasi akun'
       });
       if (!sendmail) {
-        return res.status(403).json({ message: "gagal terikirim " });
+        return res.status(403).json({ message: 'gagal terikirim ' });
       }
 
-      return res.status(200).json({ message: "berhasil terkirim" });
+      return res.status(200).json({ message: 'berhasil terkirim' });
     } catch (error) {
       return res.status(404).json({ error: error });
     }
   },
 
-  async resetPassword (req, res) {
+  async resetPassword(req, res) {
     const { newpassword, confirmpassword } = req.body;
     const { id: iduser } = req.akun;
 
     if (newpassword.length < 8) {
-      return res.status(400).json({ message: "minimal 8 karakter" });
+      return res.status(400).json({ message: 'minimal 8 karakter' });
     }
     if (newpassword !== confirmpassword) {
       return res
         .status(400)
-        .json({ message: "password dan confirm password beda!" });
+        .json({ message: 'password dan confirm password beda!' });
     }
 
     try {
@@ -179,9 +179,9 @@ export default {
 
       return res
         .status(200)
-        .json({ message: "password baru berhasil di buat!" });
+        .json({ message: 'password baru berhasil di buat!' });
     } catch (error) {
-      return res.status(500).json({ message: "error server" });
+      return res.status(500).json({ message: 'error server' });
     }
-  },
+  }
 };

@@ -1,31 +1,31 @@
-import { DataTypes } from "sequelize";
-import db from "../config/database.js";
-import User from "./user.js";
+import { DataTypes } from 'sequelize';
+import db from '../config/database.js';
+import User from './user.js';
 
 const Toko = db.define(
-  "toko",
+  'toko',
   {
     pemilik: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.INTEGER
     },
     toko: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING
     },
     kontak: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING
     },
     lokasi: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING
     },
     link_map: {
-      type: DataTypes.STRING,
-    },
+      type: DataTypes.STRING
+    }
   },
   {
-    freezeTableName: true,
+    freezeTableName: true
   }
 );
 
-Toko.belongsTo(User, { foreignKey: "pemilik" });
+Toko.belongsTo(User, { foreignKey: 'pemilik' });
 
 export default Toko;

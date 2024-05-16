@@ -1,43 +1,43 @@
-import { DataTypes } from "sequelize";
-import db from "../config/database.js";
-import Toko from "./toko.js";
+import { DataTypes } from 'sequelize';
+import db from '../config/database.js';
+import Toko from './toko.js';
 
 const Postingan = db.define(
-  "postingan",
+  'postingan',
   {
     idpenjual: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.INTEGER
     },
     penjual: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING
     },
     judul: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING
     },
     jenis: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING
     },
     deskripsi: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING
     },
     berat: {
-      type: DataTypes.DECIMAL,
+      type: DataTypes.DECIMAL
     },
     harga: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.INTEGER
     },
     foto: {
-      type: DataTypes.TEXT('long'),
+      type: DataTypes.TEXT('long')
     },
     status: {
-      type: DataTypes.ENUM("tersedia", "terjual", "menunggu"),
-    },
+      type: DataTypes.ENUM('tersedia', 'terjual', 'menunggu')
+    }
   },
   {
-    freezeTableName: true,
+    freezeTableName: true
   }
 );
 
-Postingan.belongsTo(Toko, { foreignKey: "idpenjual" });
+Postingan.belongsTo(Toko, { foreignKey: 'idpenjual' });
 
 export default Postingan;

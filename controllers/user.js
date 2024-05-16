@@ -1,10 +1,10 @@
-import user from "../models/user.js";
-import postingan from "../models/postingan.js";
-import { Op } from "sequelize";
-import verifikasi from "../models/verifikasi.js";
-import toko from "../models/toko.js";
-import tokos from "../models/toko.js";
-import sharp from "sharp";
+import user from '../models/user.js';
+import postingan from '../models/postingan.js';
+import { Op } from 'sequelize';
+import verifikasi from '../models/verifikasi.js';
+import toko from '../models/toko.js';
+import tokos from '../models/toko.js';
+import sharp from 'sharp';
 
 export default {
   async search(req, res) {
@@ -13,29 +13,29 @@ export default {
       const produk = await postingan.findAll({
         where: {
           judul: {
-            [Op.substring]: search,
-          },
+            [Op.substring]: search
+          }
         },
-        attributes: ["foto", "penjual", "jenis", "judul", "harga"],
+        attributes: ['foto', 'penjual', 'jenis', 'judul', 'harga']
       });
       if (produk.length < 1) {
-        return res.status(404).json({ message: "postingan tidak ada" });
+        return res.status(404).json({ message: 'postingan tidak ada' });
       }
 
       return res.status(200).json({ postingan: produk });
     } catch (error) {
-      return res.status(500).json({ message: "eror" });
+      return res.status(500).json({ message: 'eror' });
     }
   },
 
   async logout(req, res) {
     const { id: iduser } = req.akun;
     try {
-      console.log("tesss", iduser);
+      console.log('tesss', iduser);
 
-      res.clearCookie("token");
+      res.clearCookie('token');
 
-      return res.status(200).json({ message: "berhasil logout!" });
+      return res.status(200).json({ message: 'berhasil logout!' });
     } catch (error) {
       return res.status(500).json({ error: error });
     }
@@ -45,15 +45,15 @@ export default {
     const { id: iduser } = req.akun;
     try {
       const response = await user.findByPk(iduser, {
-        attributes: ["id", "email", "username", "foto", "birthdate", "gender"],
+        attributes: ['id', 'email', 'username', 'foto', 'birthdate', 'gender']
       });
       return res.status(200).json({
         error: false,
-        page: "myprofile",
-        user: response,
+        page: 'myprofile',
+        user: response
       });
     } catch (error) {
-      return res.status(500).json({ message: "error server" });
+      return res.status(500).json({ message: 'error server' });
     }
   },
 
@@ -66,25 +66,25 @@ export default {
       const users = await user.findByPk(iduser);
       const akun = await user.findAll({
         where: {
-          email: email,
-        },
+          email: email
+        }
       });
 
       for (const item of akun) {
         if (akun) {
-          return res.status(400).json({ message: "email sudah terdaftar!" });
+          return res.status(400).json({ message: 'email sudah terdaftar!' });
         }
       }
 
       if (!users) {
-        return res.status(404).json({ message: "user not found", user: users });
+        return res.status(404).json({ message: 'user not found', user: users });
       }
 
       if (email) {
-        if (!email.includes("@")) {
+        if (!email.includes('@')) {
           return res
             .status(400)
-            .json({ message: "email harus dengan format @" });
+            .json({ message: 'email harus dengan format @' });
         }
         await users.update({ email: email });
       }
@@ -96,7 +96,7 @@ export default {
           .resize({ width: 400 })
           .toBuffer();
 
-        const base64CompressedImage = compressedImageBuffer.toString("base64");
+        const base64CompressedImage = compressedImageBuffer.toString('base64');
         const fotos = `data:${foto.mimetype};base64,` + base64CompressedImage;
         await users.update({ foto: fotos });
       }
@@ -107,10 +107,10 @@ export default {
         await users.update({ gender: gender });
       }
 
-      return res.status(200).json({ message: "berhasil update!" });
+      return res.status(200).json({ message: 'berhasil update!' });
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: "server eror" });
+      return res.status(500).json({ message: 'server eror' });
     }
   },
 
@@ -121,36 +121,36 @@ export default {
     if (!toko || !kontak || !lokasi || !link_map) {
       return res
         .status(400)
-        .json({ message: "kolom tidak boleh ada yang kosong!" });
+        .json({ message: 'kolom tidak boleh ada yang kosong!' });
     }
     try {
       const users = await user.findByPk(iduser);
       if (!users) {
-        return res.status(404).json({ message: "user not found" });
+        return res.status(404).json({ message: 'user not found' });
       }
 
       const tokoo = await tokos.findOne({
         where: {
-          pemilik: iduser,
-        },
+          pemilik: iduser
+        }
       });
 
       if (tokoo) {
-        return res.status(400).json({ message: "toko sudah ada!" });
+        return res.status(400).json({ message: 'toko sudah ada!' });
       }
       const response = await tokos.create({
         pemilik: iduser,
         toko: toko,
         kontak: kontak,
         lokasi: lokasi,
-        link_map: link_map,
+        link_map: link_map
       });
 
       return res
         .status(201)
-        .json({ message: "berhasil mendaftarkan toko", data_toko: response });
+        .json({ message: 'berhasil mendaftarkan toko', data_toko: response });
     } catch (error) {
-      return res.status(500).json({ message: "eror server" });
+      return res.status(500).json({ message: 'eror server' });
     }
   },
 
@@ -160,18 +160,18 @@ export default {
     try {
       const toko = await tokos.findOne({
         where: {
-          pemilik: iduser,
+          pemilik: iduser
         },
-        attributes: ["id", "toko", "kontak", "lokasi", "link_map"],
+        attributes: ['id', 'toko', 'kontak', 'lokasi', 'link_map']
       });
 
       if (!toko) {
-        return res.status(404).json({ message: "Toko tidak ditemukan" });
+        return res.status(404).json({ message: 'Toko tidak ditemukan' });
       }
 
-      return res.status(200).json({ message: "Sukses", dataToko: toko });
+      return res.status(200).json({ message: 'Sukses', dataToko: toko });
     } catch (error) {
-      return res.status(500).json({ message: "Error server", error: error });
+      return res.status(500).json({ message: 'Error server', error: error });
     }
   },
 
@@ -181,34 +181,34 @@ export default {
     const foto = req.file;
 
     if (!judul || !jenis || !deskripsi || !berat || !harga) {
-      return res.status(400).json({ message: "*kolom harus di isi semua" });
+      return res.status(400).json({ message: '*kolom harus di isi semua' });
     }
     try {
       const penjuals = await tokos.findOne({
         where: {
-          pemilik: iduser,
+          pemilik: iduser
         },
         include: [
           {
             model: user,
-            foreignKey: "pemilik",
-            attributes: ["id", "username"],
-          },
+            foreignKey: 'pemilik',
+            attributes: ['id', 'username']
+          }
         ],
-        attributes: ["id", "pemilik", "toko", "kontak", "lokasi"],
+        attributes: ['id', 'pemilik', 'toko', 'kontak', 'lokasi']
       });
 
       if (!penjuals) {
         return res
           .status(400)
-          .json({ message: "daftar toko terlebih dahulu!" });
+          .json({ message: 'daftar toko terlebih dahulu!' });
       }
 
       const compressedImageBuffer = await sharp(foto.buffer)
         .resize(1280, 720)
         .toBuffer();
 
-      const base64CompressedImage = compressedImageBuffer.toString("base64");
+      const base64CompressedImage = compressedImageBuffer.toString('base64');
       const fotos = `data:${foto.mimetype};base64,` + base64CompressedImage;
       const response = await postingan.create({
         foto: fotos,
@@ -220,11 +220,11 @@ export default {
         berat: berat,
         harga: harga,
         lokasi: penjuals.lokasi,
-        status: "tersedia",
+        status: 'tersedia'
       });
-      return res.status(201).json({ message: "succes", postingan: response });
+      return res.status(201).json({ message: 'succes', postingan: response });
     } catch (error) {
-      return res.status(500).json({ message: "error server", error: error });
+      return res.status(500).json({ message: 'error server', error: error });
     }
   },
 
@@ -238,43 +238,43 @@ export default {
     try {
       let whereCondition = {
         status: {
-          [Op.not]: "terjual",
-        },
+          [Op.not]: 'terjual'
+        }
       };
 
       if (jenis) {
         whereCondition = {
           ...whereCondition,
-          jenis: jenis,
+          jenis: jenis
         };
       }
       if (search) {
         whereCondition = {
           ...whereCondition,
           judul: {
-            [Op.substring]: search,
-          },
+            [Op.substring]: search
+          }
         };
       }
 
       const response = await postingan.findAndCountAll({
         where: whereCondition,
         attributes: [
-          "id",
-          "foto",
-          "penjual",
-          "jenis",
-          "judul",
-          "berat",
-          "harga",
-          "status",
+          'id',
+          'foto',
+          'penjual',
+          'jenis',
+          'judul',
+          'berat',
+          'harga',
+          'status'
         ],
         limit,
-        offset,
+        offset
       });
 
       if (!response) {
-        return res.status(404).json({ message: "tidak ada postingan!" });
+        return res.status(404).json({ message: 'tidak ada postingan!' });
       }
 
       const { count, rows } = response;
@@ -283,13 +283,13 @@ export default {
       const hasNextPage = page < totalPages;
 
       return res.status(200).json({
-        message: "success",
+        message: 'success',
         infoHalaman: {
           Halaman: page,
           total_Halaman: totalPages,
-          halaman_berikut: hasNextPage,
+          halaman_berikut: hasNextPage
         },
-        postingan: rows,
+        postingan: rows
       });
     } catch (error) {
       return res.status(500).json({ message: error });
@@ -306,18 +306,18 @@ export default {
       const response = await postingan.findAndCountAll({
         where: {
           status: {
-            [Op.not]: "terjual",
+            [Op.not]: 'terjual'
           },
-          jenis: jenis,
+          jenis: jenis
         },
-        attributes: ["foto", "penjual", "jenis", "judul", "harga"],
+        attributes: ['foto', 'penjual', 'jenis', 'judul', 'harga'],
 
         limit,
-        offset,
+        offset
       });
 
       if (!response) {
-        return res.status(404).json({ message: "tidak ada postingan!" });
+        return res.status(404).json({ message: 'tidak ada postingan!' });
       }
 
       const { count, rows } = response;
@@ -326,13 +326,13 @@ export default {
       const hasNextPage = page < totalPages;
 
       return res.status(200).json({
-        message: "success",
+        message: 'success',
         infoHalaman: {
           Halaman: page,
           total_Halaman: totalPages,
-          halaman_berikut: hasNextPage,
+          halaman_berikut: hasNextPage
         },
-        postingan: rows,
+        postingan: rows
       });
     } catch (error) {
       return res.status(500).json({ message: error });
@@ -344,56 +344,56 @@ export default {
     try {
       const response = await postingan.findOne({
         where: {
-          id: id,
+          id: id
         },
         attributes: [
-          "id",
-          "foto",
-          "judul",
-          "jenis",
-          "berat",
-          "harga",
-          "deskripsi",
-          "status",
-          ["createdAt", "tanggalPosting"],
-          ["updatedAt", "tanggalTerjual"],
+          'id',
+          'foto',
+          'judul',
+          'jenis',
+          'berat',
+          'harga',
+          'deskripsi',
+          'status',
+          ['createdAt', 'tanggalPosting'],
+          ['updatedAt', 'tanggalTerjual']
         ],
         include: [
           {
             model: toko,
-            foreignKey: "pemilik",
-            attributes: ["toko", "lokasi", "link_map", "kontak"],
-          },
-        ],
+            foreignKey: 'pemilik',
+            attributes: ['toko', 'lokasi', 'link_map', 'kontak']
+          }
+        ]
       });
 
       if (!response) {
-        return res.status(403).json({ message: "tidak ada postingan" });
+        return res.status(403).json({ message: 'tidak ada postingan' });
       }
 
       const postDate = response
-        .get("tanggalPosting")
-        .toLocaleDateString("id-ID", {
-          day: "2-digit",
-          month: "long",
-          year: "numeric",
+        .get('tanggalPosting')
+        .toLocaleDateString('id-ID', {
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric'
         });
 
       let soldDate = null;
-      if (response.get("status") === "terjual") {
-        soldDate = response.get("tanggalTerjual").toLocaleDateString("id-ID", {
-          day: "2-digit",
-          month: "long",
-          year: "numeric",
+      if (response.get('status') === 'terjual') {
+        soldDate = response.get('tanggalTerjual').toLocaleDateString('id-ID', {
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric'
         });
       }
 
-      response.setDataValue("tanggalPosting", postDate);
-      response.setDataValue("tanggalTerjual", soldDate);
+      response.setDataValue('tanggalPosting', postDate);
+      response.setDataValue('tanggalTerjual', soldDate);
 
       return res.status(200).json({
-        message: "succes",
-        postingan: response,
+        message: 'succes',
+        postingan: response
       });
     } catch (error) {
       return res.status(500).json({ message: error });
@@ -406,12 +406,12 @@ export default {
     try {
       const response = await postingan.findAll({
         where: {
-          idpenjual: iduser,
+          idpenjual: iduser
         },
-        attributes: ["judul", "jenis", "berat", "harga", "status"],
+        attributes: ['judul', 'jenis', 'berat', 'harga', 'status']
       });
       if (!response[0])
-        return res.status(403).json({ message: "postingan belum ada!" });
+        return res.status(403).json({ message: 'postingan belum ada!' });
 
       return res.status(200).json({ manajemen: response });
     } catch (error) {
@@ -429,53 +429,53 @@ export default {
         include: [
           {
             model: user,
-            foreignKey: "pemilik",
-            attributes: [],
-          },
-        ],
+            foreignKey: 'pemilik',
+            attributes: []
+          }
+        ]
       });
       const response = await postingan.findByPk(idpostingan, {
         include: [
           {
             model: toko,
-            foreignKey: "idpenjual",
-          },
-        ],
+            foreignKey: 'idpenjual'
+          }
+        ]
       });
       if (!response) {
-        return res.status(404).json({ message: "postingan tidak ada!" });
+        return res.status(404).json({ message: 'postingan tidak ada!' });
       }
 
       if (iduser === response.toko.pemilik) {
         return res
           .status(400)
-          .json({ message: "nda bisa dong postingan anda sendiri" });
+          .json({ message: 'nda bisa dong postingan anda sendiri' });
       }
 
-      if (response.status === "terjual") {
-        return res.status(400).json({ message: "sudah terjual" });
+      if (response.status === 'terjual') {
+        return res.status(400).json({ message: 'sudah terjual' });
       }
 
-      if (response.status === "menunggu") {
+      if (response.status === 'menunggu') {
         return res
           .status(400)
-          .json({ message: "sedang transaksi oleh pembeli lain" });
+          .json({ message: 'sedang transaksi oleh pembeli lain' });
       }
 
-      await response.update({ status: "menunggu" });
+      await response.update({ status: 'menunggu' });
 
       const verif = await verifikasi.create({
         pembeli: pembeli.username,
-        idpostingan: idpostingan,
+        idpostingan: idpostingan
       });
 
       return res.status(200).json({
-        message: "succes,dan silahkan hubungi penjual",
+        message: 'succes,dan silahkan hubungi penjual',
         users: users,
-        response: response.toko.pemilik,
+        response: response.toko.pemilik
       });
     } catch (error) {
-      return res.status(500).json({ message: "ERROR" });
+      return res.status(500).json({ message: 'ERROR' });
     }
   },
 
@@ -486,17 +486,17 @@ export default {
         include: [
           {
             model: toko,
-            foreignKey: "pemilik",
+            foreignKey: 'pemilik',
             where: {
-              pemilik: iduser,
-            },
-          },
-        ],
+              pemilik: iduser
+            }
+          }
+        ]
       });
 
       return res.status(200).json({ total_produk: response.length });
     } catch (error) {
-      return res.status(500).json({ message: "eror" });
+      return res.status(500).json({ message: 'eror' });
     }
   },
 
@@ -505,22 +505,22 @@ export default {
     try {
       const response = await postingan.findAll({
         where: {
-          status: "terjual",
+          status: 'terjual'
         },
         include: [
           {
             model: toko,
-            foreignKey: "pemilik",
+            foreignKey: 'pemilik',
             where: {
-              pemilik: iduser,
-            },
-          },
-        ],
+              pemilik: iduser
+            }
+          }
+        ]
       });
 
       return res.status(200).json({ total_produk: response.length });
     } catch (error) {
-      return res.status(500).json({ message: "eror", error: error });
+      return res.status(500).json({ message: 'eror', error: error });
     }
   },
 
@@ -528,19 +528,19 @@ export default {
     const { id: iduser } = req.akun;
 
     try {
-      const total = await postingan.sum("harga", {
+      const total = await postingan.sum('harga', {
         where: {
-          status: "terjual",
+          status: 'terjual'
         },
         include: [
           {
             model: toko,
-            foreignKey: "pemilik",
+            foreignKey: 'pemilik',
             where: {
-              pemilik: iduser,
-            },
-          },
-        ],
+              pemilik: iduser
+            }
+          }
+        ]
       });
 
       return res.status(200).json({ total: total });
@@ -553,32 +553,32 @@ export default {
     const { id: iduser } = req.akun;
     try {
       const verif = await verifikasi.findAll({
-        attributes: ["id", "pembeli"],
+        attributes: ['id', 'pembeli'],
         include: [
           {
             model: postingan,
-            foreignKey: "idpostingan",
+            foreignKey: 'idpostingan',
             where: {
-              status: "menunggu",
+              status: 'menunggu'
             },
             include: [
               {
                 model: toko,
-                foreignKey: "idpenjual",
+                foreignKey: 'idpenjual',
                 attributes: [],
                 where: {
-                  pemilik: iduser,
-                },
-              },
+                  pemilik: iduser
+                }
+              }
             ],
-            attributes: ["judul", "berat", "harga", "status"],
-          },
-        ],
+            attributes: ['judul', 'berat', 'harga', 'status']
+          }
+        ]
       });
 
       return res.status(200).json({ daftar_menunggu_verifikasi: verif });
     } catch (error) {
-      return res.status(500).json({ message: "eror server" });
+      return res.status(500).json({ message: 'eror server' });
     }
   },
 
@@ -591,97 +591,97 @@ export default {
         include: [
           {
             model: postingan,
-            foreignKey: "idpenjual",
+            foreignKey: 'idpenjual',
             include: [
               {
                 model: toko,
-                foreignKey: "pemilik",
-              },
-            ],
-          },
-        ],
+                foreignKey: 'pemilik'
+              }
+            ]
+          }
+        ]
       });
 
       if (!verif) {
-        return res.status(404).json({ message: "verifikasi not found" });
+        return res.status(404).json({ message: 'verifikasi not found' });
       }
 
-      if (verif.postingan.status === "terjual") {
-        return res.status(400).json({ message: "postingan sudah terjual" });
+      if (verif.postingan.status === 'terjual') {
+        return res.status(400).json({ message: 'postingan sudah terjual' });
       }
 
-      if (aksi === "Setujui") {
-        await verif.postingan.update({ status: "terjual" });
+      if (aksi === 'Setujui') {
+        await verif.postingan.update({ status: 'terjual' });
         await verifikasi.destroy({
           where: {
-            idpostingan: verif.idpostingan,
-          },
+            idpostingan: verif.idpostingan
+          }
         });
-        return res.status(200).json({ message: "berhasil terjual" });
+        return res.status(200).json({ message: 'berhasil terjual' });
       }
 
-      if (aksi === "Batalkan") {
+      if (aksi === 'Batalkan') {
         for (const item of verif) {
           await item.destroy();
         }
-        return res.status(200).json({ message: "verifikasi di batalkan" });
+        return res.status(200).json({ message: 'verifikasi di batalkan' });
       }
 
-      if (aksi !== "setuju" || aksi !== "batalkan") {
-        return res.status(400).json({ message: "salah value" });
+      if (aksi !== 'setuju' || aksi !== 'batalkan') {
+        return res.status(400).json({ message: 'salah value' });
       }
     } catch (error) {
-      return res.status(500).json({ message: "Error server" });
+      return res.status(500).json({ message: 'Error server' });
     }
   },
 
   async manajemen(req, res) {
     const { id: iduser } = req.akun;
     const verif = await verifikasi.findAll();
-    console.log("tesss", verif);
+    console.log('tesss', verif);
     try {
       const produk = await postingan.findAll({
-        attributes: ["id", "judul", "jenis", "berat", "harga", "status"],
+        attributes: ['id', 'judul', 'jenis', 'berat', 'harga', 'status'],
         include: [
           {
             model: toko,
-            foreignKey: "pemilik",
+            foreignKey: 'pemilik',
             where: {
-              pemilik: iduser,
+              pemilik: iduser
             },
-            attributes: [],
-          },
-        ],
+            attributes: []
+          }
+        ]
       });
 
-      const verifProduk = produk.map((item) => {
+      const verifProduk = produk.map(item => {
         const matchedVerif = verif.find(
-          (v) => v.dataValues.idpostingan === item.dataValues.id
+          v => v.dataValues.idpostingan === item.dataValues.id
         );
         if (matchedVerif) {
           return {
             ...item.dataValues,
-            id_verify: matchedVerif.id,
+            id_verify: matchedVerif.id
           };
         }
         return { ...item.dataValues, id_verify: null };
       });
 
-      const tersedia = produk.filter((p) => p.status === "tersedia");
-      const menunggu = produk.filter((p) => p.status === "menunggu");
-      const terjual = produk.filter((p) => p.status === "terjual");
+      const tersedia = produk.filter(p => p.status === 'tersedia');
+      const menunggu = produk.filter(p => p.status === 'menunggu');
+      const terjual = produk.filter(p => p.status === 'terjual');
 
       return res.status(200).json({
-        message: "succes",
+        message: 'succes',
         semua: produk.length,
         tersedia: tersedia.length,
         menunggu: menunggu.length,
         terjual: terjual.length,
-        produk: verifProduk,
+        produk: verifProduk
       });
     } catch (error) {
-      console.log("errorrrrr", error);
-      return res.status(500).json({ message: "eror server" });
+      console.log('errorrrrr', error);
+      return res.status(500).json({ message: 'eror server' });
     }
   },
 
@@ -692,29 +692,29 @@ export default {
       const produk = await postingan.findAll({
         where: {
           judul: {
-            [Op.substring]: search,
-          },
+            [Op.substring]: search
+          }
         },
-        attributes: ["foto", "penjual", "jenis", "judul", "harga"],
+        attributes: ['foto', 'penjual', 'jenis', 'judul', 'harga'],
         include: [
           {
             model: toko,
-            foreignKey: "pemilik",
+            foreignKey: 'pemilik',
             where: {
-              pemilik: iduser,
+              pemilik: iduser
             },
-            attributes: [],
-          },
-        ],
+            attributes: []
+          }
+        ]
       });
 
       if (produk.length < 1) {
-        return res.status(404).json({ message: "postingan tidak ada" });
+        return res.status(404).json({ message: 'postingan tidak ada' });
       }
 
       return res.status(200).json({ postingan: produk });
     } catch (error) {
-      return res.status(500).json({ message: "eror" });
+      return res.status(500).json({ message: 'eror' });
     }
   },
 
@@ -729,16 +729,16 @@ export default {
         include: [
           {
             model: toko,
-            foreignKey: "pemilik",
+            foreignKey: 'pemilik',
             where: {
-              pemilik: iduser,
-            },
-          },
-        ],
+              pemilik: iduser
+            }
+          }
+        ]
       });
 
       if (!produk) {
-        return res.status(400).json({ message: "postingan tidak ada!" });
+        return res.status(400).json({ message: 'postingan tidak ada!' });
       }
 
       if (judul) {
@@ -761,16 +761,16 @@ export default {
           .resize(1280, 720)
           .toBuffer();
 
-        const base64CompressedImage = compressedImageBuffer.toString("base64");
+        const base64CompressedImage = compressedImageBuffer.toString('base64');
         const fotos = `data:${foto.mimetype};base64,` + base64CompressedImage;
         await produk.update({ foto: fotos });
       }
 
       return res
         .status(200)
-        .json({ message: "postingan berhasil di update!", data: produk });
+        .json({ message: 'postingan berhasil di update!', data: produk });
     } catch (error) {
-      return res.status(500).json({ message: "error internal server" });
+      return res.status(500).json({ message: 'error internal server' });
     }
   },
 
@@ -779,16 +779,16 @@ export default {
     const idpostingan = req.query.idpostingan;
     const verif = await verifikasi.findAll({
       where: {
-        idpostingan: idpostingan,
-      },
+        idpostingan: idpostingan
+      }
     });
 
-    console.log("erere", verif);
+    console.log('erere', verif);
     try {
       const verif = await verifikasi.findAll({
         where: {
-          idpostingan: idpostingan,
-        },
+          idpostingan: idpostingan
+        }
       });
 
       for (const item of verif) {
@@ -799,22 +799,22 @@ export default {
         include: [
           {
             model: toko,
-            foreignKey: "pemilik",
+            foreignKey: 'pemilik',
             where: {
-              pemilik: iduser,
-            },
-          },
-        ],
+              pemilik: iduser
+            }
+          }
+        ]
       });
 
       if (!produk) {
-        return res.status(400).json({ message: "postingan tidak ada!" });
+        return res.status(400).json({ message: 'postingan tidak ada!' });
       }
 
       await produk.destroy();
-      return res.status(200).json({ message: "berhasil terhapus!" });
+      return res.status(200).json({ message: 'berhasil terhapus!' });
     } catch (error) {
-      return res.status(500).json({ message: "internal server error", error });
+      return res.status(500).json({ message: 'internal server error', error });
     }
-  },
+  }
 };

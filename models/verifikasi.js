@@ -1,22 +1,22 @@
-import { DataTypes } from "sequelize";
-import db from "../config/database.js";
-import Postingan from "./postingan.js";
+import { DataTypes } from 'sequelize';
+import db from '../config/database.js';
+import Postingan from './postingan.js';
 
 const Verifikasi = db.define(
-  "verifikasi",
+  'verifikasi',
   {
     pembeli: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING
     },
     idpostingan: {
-      type: DataTypes.INTEGER,
-    },
+      type: DataTypes.INTEGER
+    }
   },
   {
-    freezeTableName: true,
+    freezeTableName: true
   }
 );
 
-Verifikasi.belongsTo(Postingan, { foreignKey: "idpostingan" });
+Verifikasi.belongsTo(Postingan, { foreignKey: 'idpostingan' });
 
 export default Verifikasi;

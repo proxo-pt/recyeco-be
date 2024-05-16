@@ -1,37 +1,37 @@
-import { DataTypes } from "sequelize";
-import db from "../config/database.js";
+import { DataTypes } from 'sequelize';
+import db from '../config/database.js';
 
 const User = db.define(
-  "user",
+  'user',
   {
     username: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING
     },
     email: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING
     },
     password: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING
     },
     foto: {
-      type: DataTypes.TEXT('long'),
+      type: DataTypes.TEXT('long')
     },
     role: {
-      type: DataTypes.ENUM("toko", "user"),
-      defaultValue: "user",
+      type: DataTypes.ENUM('toko', 'user'),
+      defaultValue: 'user'
     },
     token: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING
     },
     birthdate: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING
     },
     gender: {
-      type: DataTypes.STRING,
-    },
+      type: DataTypes.STRING
+    }
   },
   {
-    freezeTableName: true,
+    freezeTableName: true
   }
 );
 
