@@ -3,11 +3,11 @@ import 'dotenv/config';
 import pg from 'pg'
 
 const db = new Sequelize(
-  process.env.SUPABASE_DB,
-  process.env.SUPABASE_USERNAME,
-  process.env.SUPABASE_PASSWORD,
+  process.env.DATABASE_NAME,
+  process.env.DATABASE_USER,
+  process.env.DATABASE_PASSWORD,
   {
-    host: process.env.SUPABASE_HOST,
+    host: process.env.DATABASE_HOST,
     dialect: 'postgres',
     dialectModule: pg
   }
