@@ -1,17 +1,17 @@
 import { Sequelize } from 'sequelize';
 import 'dotenv/config';
-import pg from 'pg'
 
-const db = new Sequelize(
-  process.env.DATABASE_NAME,
-  process.env.DATABASE_USER,
-  process.env.DATABASE_PASSWORD,
-  {
-    host: process.env.DATABASE_HOST,
-    dialect: 'postgres',
-    dialectModule: pg
+if (!process.env.DATABASE_URL) {
+  throw new Error('DATABASE_URL is not set');
+}
+
+const db = new Sequelize(process.env.DATABASE_URL, {
+  dialectOptions: {
+    ssl: {
+      require: true
+    }
   }
-);
+});
 
 try {
   db.authenticate();
